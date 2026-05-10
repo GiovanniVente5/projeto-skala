@@ -2,12 +2,12 @@
 setlocal
 
 cd /d "%~dp0"
-set LOG=build-portable.log
+set LOG=build-installer.log
 
 if exist "%LOG%" del "%LOG%"
 
 echo ==============================
-echo Building SkalaConvertor portable
+echo Building SkalaConvertor installer
 echo ==============================
 echo.
 
@@ -35,6 +35,31 @@ if errorlevel 1 (
     exit /b 1
 )
 
+echo Checking WiX... >> "%LOG%"
+where wix >> "%LOG%" 2>&1
+if errorlevel 1 (
+    where candle >> "%LOG%" 2>&1
+    if errorlevel 1 (
+        echo ERROR: WiX was not found on PATH.
+        echo Install WiX Toolset to create Windows .exe installers.
+        echo WiX 4 provides wix.exe. WiX 3 provides candle.exe and light.exe.
+        echo See details in %LOG%
+        echo.
+        pause
+        exit /b 1
+    )
+
+    where light >> "%LOG%" 2>&1
+    if errorlevel 1 (
+        echo ERROR: light.exe from WiX was not found on PATH.
+        echo Install WiX Toolset to create Windows .exe installers.
+        echo See details in %LOG%
+        echo.
+        pause
+        exit /b 1
+    )
+)
+
 echo Running Maven build...
 echo Running Maven build... >> "%LOG%"
 call mvnw.cmd clean package dependency:copy-dependencies -DincludeScope=runtime >> "%LOG%" 2>&1
@@ -46,8 +71,8 @@ if errorlevel 1 (
     exit /b 1
 )
 
-if exist dist\SkalaConvertor rmdir /s /q dist\SkalaConvertor
 if not exist dist mkdir dist
+del /q dist\SkalaConvertor*.exe >> "%LOG%" 2>&1
 if exist target\installer-input rmdir /s /q target\installer-input
 mkdir target\installer-input
 
@@ -69,15 +94,21 @@ if errorlevel 1 (
     exit /b 1
 )
 
-echo Creating portable app...
-echo Creating portable app... >> "%LOG%"
+echo Creating Windows installer...
+echo Creating Windows installer... >> "%LOG%"
 jpackage ^
-  --type app-image ^
+  --type exe ^
   --name SkalaConvertor ^
+  --app-version 1.0.0 ^
+  --vendor "Skala" ^
   --dest dist ^
   --input target\installer-input ^
   --main-jar Projeto_Skala-1.0-SNAPSHOT.jar ^
-  --main-class org.example.projeto_skala.Launcher >> "%LOG%" 2>&1
+  --main-class org.example.projeto_skala.Launcher ^
+  --win-per-user-install ^
+  --win-dir-chooser ^
+  --win-menu ^
+  --win-shortcut >> "%LOG%" 2>&1
 
 if errorlevel 1 (
     echo.
@@ -87,17 +118,17 @@ if errorlevel 1 (
     exit /b 1
 )
 
-if not exist dist\SkalaConvertor\SkalaConvertor.exe (
+if not exist dist\SkalaConvertor*.exe (
     echo.
-    echo ERROR: jpackage finished but the exe was not created.
+    echo ERROR: jpackage finished but the installer exe was not created.
     echo Open %LOG% for details.
     pause
     exit /b 1
 )
 
 echo.
-echo Portable app created at:
-echo dist\SkalaConvertor\SkalaConvertor.exe
+echo Installer created in the dist folder.
+echo Look for a file like SkalaConvertor-1.0.0.exe
 echo.
 pause
 endlocal
