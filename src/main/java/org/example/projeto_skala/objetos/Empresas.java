@@ -1,18 +1,19 @@
 package org.example.projeto_skala.objetos;
 
+import java.util.List;
 import java.util.Map;
 
 public class Empresas {
     String nome;
     int num;
-    Map<Integer,String> servicosMap;
+    List<Servicos> servicos;
 
     @Override
     public String toString() {
         return "Empresas{" +
                "nome='" + nome + '\'' +
                ", num=" + num +
-               ", servicosMap=" + servicosMap +
+               ", servicos=" + servicos +
                '}';
     }
 
@@ -21,10 +22,10 @@ public class Empresas {
         this.num = num;
     }
 
-    public Empresas(String nome, int num, Map<Integer, String> servicosMap) {
+    public Empresas(String nome, int num, List<Servicos> servicos) {
         this.nome = nome;
         this.num = num;
-        this.servicosMap = servicosMap;
+        this.servicos = servicos;
     }
 
     public String getNome() {
@@ -43,11 +44,11 @@ public class Empresas {
         this.num = num;
     }
 
-    public Map<Integer, String> getServicosMap() {
-        return servicosMap;
+    public List<Servicos> getServicos() {
+        return servicos;
     }
 
-    public void setServicosMap(Map<Integer, String> servicosMap) {
-        this.servicosMap = servicosMap;
+    public void setServicos(List<Servicos> servicos) {
+        this.servicos = servicos;
     }
 }
