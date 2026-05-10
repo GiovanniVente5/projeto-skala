@@ -1,22 +1,22 @@
 # Projeto Skala
 
-## Build portable app on Windows
+## Construa o portable app no Windows
 
-Requirements:
+Requerimentos:
 
-- JDK 21 installed
-- `java` and `jpackage` available on PATH
+- JDK 21 Instalado
+- `java` e `jpackage` Disponivel no PATH
 
-To create the portable version, run this from the project root:
+Para criar a versão portavel, rode isso na raiz do projeto:
 
 ```bat
 build-portable.bat
 ```
 
-The executable will be created at:
+O executavel será criado no:
 
 ```text
 dist\SkalaConvertor\SkalaConvertor.exe
 ```
 
-You can zip the `SkalaConvertor` folder and send it to another Windows machine. This is not an installer; open the `.exe` directly.
+Você pode zippar o `SkalaConvertor` pasta e mandar para outra maquina windows. Isso não é um instalador, abra o `.exe ` diretamente
