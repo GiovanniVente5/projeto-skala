@@ -1,8 +1,11 @@
 @echo off
-setlocal
+setlocal EnableExtensions EnableDelayedExpansion
 
 cd /d "%~dp0"
 set LOG=build-portable.log
+set JDK_HOME=
+set JAVA_CMD=
+set JPACKAGE_CMD=
 
 if exist "%LOG%" del "%LOG%"
 
@@ -11,29 +14,30 @@ echo Building SkalaConvertor portable
 echo ==============================
 echo.
 
-echo Checking Java... >> "%LOG%"
-where java >> "%LOG%" 2>&1
-if errorlevel 1 (
-    echo ERROR: Java was not found on PATH.
-    echo Install JDK 21 and make sure java works in the terminal.
-    echo See details in %LOG%
+call :find_jdk
+if not defined JDK_HOME (
+    echo ERROR: A full JDK with jpackage was not found.
+    echo Install JDK 21 or newer and set JAVA_HOME to the JDK folder.
+    echo Example: C:\Program Files\Java\jdk-21
     echo.
+    echo Details were written to %LOG%
     pause
     exit /b 1
 )
 
-echo Checking jpackage... >> "%LOG%"
-where jpackage >> "%LOG%" 2>&1
-if errorlevel 1 (
-    echo ERROR: jpackage was not found on PATH.
-    echo jpackage comes with the JDK, not the JRE.
-    echo Install JDK 21 and add its bin folder to PATH.
-    echo Example: C:\Program Files\Java\jdk-21\bin
-    echo See details in %LOG%
-    echo.
-    pause
-    exit /b 1
-)
+set "JAVA_HOME=%JDK_HOME%"
+set "JAVA_CMD=%JDK_HOME%\bin\java.exe"
+set "JPACKAGE_CMD=%JDK_HOME%\bin\jpackage.exe"
+set "PATH=%JDK_HOME%\bin;%PATH%"
+
+echo Using JDK: %JDK_HOME%
+echo Using JDK: %JDK_HOME% >> "%LOG%"
+echo. >> "%LOG%"
+echo Java version: >> "%LOG%"
+"%JAVA_CMD%" -version >> "%LOG%" 2>&1
+echo. >> "%LOG%"
+echo jpackage version: >> "%LOG%"
+"%JPACKAGE_CMD%" --version >> "%LOG%" 2>&1
 
 echo Running Maven build...
 echo Running Maven build... >> "%LOG%"
@@ -71,7 +75,7 @@ if errorlevel 1 (
 
 echo Creating portable app...
 echo Creating portable app... >> "%LOG%"
-jpackage ^
+"%JPACKAGE_CMD%" ^
   --type app-image ^
   --name SkalaConvertor ^
   --dest dist ^
@@ -101,3 +105,47 @@ echo dist\SkalaConvertor\SkalaConvertor.exe
 echo.
 pause
 endlocal
+exit /b 0
+
+:find_jdk
+echo Searching for a JDK with jpackage... >> "%LOG%"
+
+if defined JAVA_HOME (
+    call :try_jdk "%JAVA_HOME%"
+    if defined JDK_HOME exit /b 0
+)
+
+for /f "delims=" %%J in ('where jpackage 2^>nul') do (
+    if not defined JDK_HOME (
+        for %%P in ("%%~dpJ..") do call :try_jdk "%%~fP"
+    )
+)
+if defined JDK_HOME exit /b 0
+
+for /d %%J in ("%ProgramFiles%\Java\jdk-*") do (
+    if not defined JDK_HOME call :try_jdk "%%~fJ"
+)
+if defined JDK_HOME exit /b 0
+
+for /d %%J in ("%ProgramFiles%\Eclipse Adoptium\jdk-*") do (
+    if not defined JDK_HOME call :try_jdk "%%~fJ"
+)
+if defined JDK_HOME exit /b 0
+
+for /d %%J in ("%ProgramFiles%\Microsoft\jdk-*") do (
+    if not defined JDK_HOME call :try_jdk "%%~fJ"
+)
+if defined JDK_HOME exit /b 0
+
+for /d %%J in ("%USERPROFILE%\.jdks\*") do (
+    if not defined JDK_HOME call :try_jdk "%%~fJ"
+)
+exit /b 0
+
+:try_jdk
+set "CANDIDATE=%~1"
+echo Checking %CANDIDATE% >> "%LOG%"
+if exist "%CANDIDATE%\bin\java.exe" if exist "%CANDIDATE%\bin\jpackage.exe" (
+    set "JDK_HOME=%CANDIDATE%"
+)
+exit /b 0
