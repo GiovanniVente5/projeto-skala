@@ -6,6 +6,15 @@
 
 .button {
     -fx-background-color: rgb(120,120,120);
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-font-weight: 700;
+    -fx-padding: 10px 14px;
+}
+
+.button:disabled {
+    -fx-cursor: default;
+    -fx-opacity: 0.45;
 }
 
 .label,
@@ -63,4 +72,138 @@
 .selected-file {
     -fx-text-fill: #aeb8bd;
     -fx-font-size: 12px;
+}
+
+.period-selector {
+    -fx-alignment: center;
+}
+
+.field-label {
+    -fx-text-fill: #cbd3d7;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+}
+
+.combo-box,
+.spinner {
+    -fx-background-color: #3b4145;
+    -fx-background-radius: 6px;
+}
+
+.combo-box .list-cell,
+.spinner .text-field {
+    -fx-background-color: #3b4145;
+    -fx-text-fill: white;
+}
+
+.menu-actions {
+    -fx-padding: 0;
+}
+
+.clientes-toolbar {
+    -fx-background-color: #2f3437;
+}
+
+.clientes-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: 700;
+}
+
+.periodo-title {
+    -fx-text-fill: #64c784;
+    -fx-font-size: 15px;
+    -fx-font-weight: 800;
+    -fx-padding: 10px 0 0 0;
+}
+
+.clientes-scroll {
+    -fx-background: #2f3437;
+    -fx-background-color: #2f3437;
+    -fx-border-color: transparent;
+}
+
+.clientes-scroll > .viewport {
+    -fx-background-color: #2f3437;
+}
+
+.cliente-card {
+    -fx-background-color: #3b4145;
+    -fx-background-radius: 8px;
+    -fx-border-color: #59646b;
+    -fx-border-radius: 8px;
+    -fx-padding: 16px;
+}
+
+.cliente-header {
+    -fx-alignment: center-left;
+}
+
+.cliente-nome {
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+}
+
+.cliente-numero {
+    -fx-background-color: #64c784;
+    -fx-background-radius: 6px;
+    -fx-text-fill: #172118;
+    -fx-font-weight: 800;
+    -fx-padding: 5px 8px;
+}
+
+.servicos-lista {
+    -fx-padding: 4px 0 0 0;
+}
+
+.servico-linha {
+    -fx-alignment: center-left;
+    -fx-background-color: #31373b;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 10px;
+}
+
+.servico-cadastro-linha {
+    -fx-alignment: center-left;
+    -fx-background-color: #3b4145;
+    -fx-background-radius: 8px;
+    -fx-border-color: #59646b;
+    -fx-border-radius: 8px;
+    -fx-padding: 12px;
+}
+
+.servico-nome {
+    -fx-text-fill: #edf2f4;
+    -fx-font-weight: 600;
+}
+
+.servico-numero {
+    -fx-text-fill: #5cc5fa;
+    -fx-font-size: 12px;
+}
+
+.servico-valor {
+    -fx-text-fill: #64c784;
+    -fx-font-weight: 700;
+}
+
+.servico-vazio,
+.empty-state {
+    -fx-text-fill: #cbd3d7;
+}
+
+.servico-form {
+    -fx-background-color: #3b4145;
+    -fx-background-radius: 8px;
+    -fx-padding: 14px;
+}
+
+.text-field {
+    -fx-background-color: #31373b;
+    -fx-background-radius: 6px;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #aeb8bd;
+}
+
+.danger-button {
+    -fx-background-color: #8f4545;
 }

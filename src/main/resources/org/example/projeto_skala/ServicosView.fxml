@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.projeto_skala.Controller.ServicosController">
+    <stylesheets>
+        <URL value="@MenuView.css" />
+    </stylesheets>
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="clientes-toolbar">
+            <padding>
+                <Insets bottom="18" left="32" right="32" top="24" />
+            </padding>
+            <Button mnemonicParsing="false" onAction="#voltarMenu" text="Voltar" />
+            <Label styleClass="clientes-title" text="Servicos" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#atualizarServicos" text="Atualizar" />
+        </HBox>
+    </top>
+    <center>
+        <VBox spacing="16">
+            <padding>
+                <Insets bottom="32" left="32" right="32" top="8" />
+            </padding>
+            <VBox spacing="10" styleClass="servico-form">
+                <HBox spacing="10">
+                    <TextField fx:id="numeroField" promptText="Numero" prefWidth="100.0" />
+                    <TextField fx:id="nomeField" promptText="Nome do servico" HBox.hgrow="ALWAYS" />
+                    <TextField fx:id="valorField" promptText="Valor" prefWidth="120.0" />
+                    <Button mnemonicParsing="false" onAction="#adicionarServico" text="Adicionar" />
+                </HBox>
+                <Label fx:id="mensagemLabel" styleClass="selected-file" text="" />
+            </VBox>
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="clientes-scroll" VBox.vgrow="ALWAYS">
+                <content>
+                    <VBox fx:id="servicosContainer" spacing="10" />
+                </content>
+            </ScrollPane>
+        </VBox>
+    </center>
+</BorderPane>

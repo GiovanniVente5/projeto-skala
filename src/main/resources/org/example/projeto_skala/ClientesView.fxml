@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.projeto_skala.Controller.ClientesController">
+    <stylesheets>
+        <URL value="@MenuView.css" />
+    </stylesheets>
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="clientes-toolbar">
+            <padding>
+                <Insets bottom="18" left="32" right="32" top="24" />
+            </padding>
+            <Button mnemonicParsing="false" onAction="#voltarMenu" text="Voltar" />
+            <Label styleClass="clientes-title" text="Clientes" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#atualizarClientes" text="Atualizar" />
+        </HBox>
+    </top>
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="clientes-scroll">
+            <content>
+                <VBox fx:id="clientesContainer" spacing="14">
+                    <padding>
+                        <Insets bottom="32" left="32" right="32" top="8" />
+                    </padding>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+</BorderPane>

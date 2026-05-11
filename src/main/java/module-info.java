@@ -15,4 +15,8 @@ module org.example.projeto_skala {
     opens org.example.projeto_skala.objetos to com.google.gson;
 
     exports org.example.projeto_skala;
+    exports org.example.projeto_skala.Controller;
+    opens org.example.projeto_skala.Controller to javafx.fxml;
+    exports org.example.projeto_skala.Json;
+    opens org.example.projeto_skala.Json to javafx.fxml;
 }
