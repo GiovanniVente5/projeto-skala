@@ -31,7 +31,6 @@
     </HBox>
     <HBox alignment="CENTER" maxWidth="460.0" spacing="12" styleClass="menu-actions">
         <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#abrirTelaClientes" text="Cliente" HBox.hgrow="ALWAYS" />
-        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#abrirTelaServicos" text="Servicos" HBox.hgrow="ALWAYS" />
         <Button disable="true" maxWidth="Infinity" mnemonicParsing="false" text="Relatorios" HBox.hgrow="ALWAYS" />
     </HBox>
 

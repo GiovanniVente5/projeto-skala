@@ -16,6 +16,7 @@
             </padding>
             <Button mnemonicParsing="false" onAction="#voltarMenu" text="Voltar" />
             <Label styleClass="clientes-title" text="Clientes" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#adicionarCliente" text="+ Adicionar" />
             <Button mnemonicParsing="false" onAction="#atualizarClientes" text="Atualizar" />
         </HBox>
     </top>

@@ -22,8 +22,9 @@ public class LerExcel {
             Sheet sheet1 = workbook.getSheetAt(1);
 
             Map<Integer, String> servicosNome = new HashMap<>();
+//          LENDO SERVIÇOS
             for (Row row : sheet1) {
-                if (!getValorCell(row.getCell(0)).isEmpty()) {
+                if (!getValorCell(row.getCell(0)).isEmpty() && row.getRowNum() != 0) {
                     int num = (int) Double.parseDouble(getValorCell(row.getCell(0)));
                     String nome = getValorCell(row.getCell(1));
 
@@ -33,7 +34,7 @@ public class LerExcel {
 
             Map<Integer, Integer> servicosPorColuna = new LinkedHashMap<>();
             Row rowServicos = sheet0.getRow(1);
-            int celula = 2;
+            int celula = 6;
 
             while (!getValorCell(rowServicos.getCell(celula)).isEmpty()) {
                 int numServico = (int) Double.parseDouble(getValorCell(rowServicos.getCell(celula)));
@@ -41,6 +42,7 @@ public class LerExcel {
                 celula++;
             }
 
+//          LENDO EMPRESAS
             for (Row row : sheet0) {
                 if (row.getRowNum() <= 1 || getValorCell(row.getCell(0)).isEmpty()) {
                     continue;
@@ -48,6 +50,10 @@ public class LerExcel {
 
                 int num = (int) Double.parseDouble(getValorCell(row.getCell(0)));
                 String nome = getValorCell(row.getCell(1));
+                String endereco = getValorCell(row.getCell(2));
+                String CNPJ = getValorCell(row.getCell(3));
+                String InscrCCM = getValorCell(row.getCell(4));
+                String InscrEST = getValorCell(row.getCell(5));
 
                 List<Servicos> servicos = new ArrayList<>();
 
@@ -62,7 +68,7 @@ public class LerExcel {
                     servicos.add(new Servicos(servicosNome.get(chave), chave, Double.parseDouble(valorServico)));
                 }
 
-                linhas.add(new Empresas(nome, num, servicos));
+                linhas.add(new Empresas(nome, num, endereco, CNPJ, InscrCCM, InscrEST, servicos));
 
             }
 

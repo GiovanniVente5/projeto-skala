@@ -152,4 +152,25 @@ public class JsonCriar {
             throw new IllegalArgumentException("Ano invalido: " + ano);
         }
     }
+
+    public static void excluirCliente(int numeroCliente) {
+        File dataFolder = new File(DATA_FOLDER);
+        if (!dataFolder.exists()) {
+            return;
+        }
+
+        File[] jsonFiles = listarArquivosJson();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        for (File jsonFile : jsonFiles) {
+            List<Empresas> empresas = carregarEmpresasExistentes(gson, jsonFile);
+            empresas.removeIf(e -> e.getNum() == numeroCliente);
+
+            try (FileWriter writer = new FileWriter(jsonFile)) {
+                gson.toJson(empresas, writer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

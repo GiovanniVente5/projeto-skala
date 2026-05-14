@@ -126,12 +126,35 @@
     -fx-background-color: #2f3437;
 }
 
-.cliente-card {
+.cliente-card,
+.cliente-dropdown > .title {
     -fx-background-color: #3b4145;
     -fx-background-radius: 8px;
     -fx-border-color: #59646b;
     -fx-border-radius: 8px;
     -fx-padding: 16px;
+}
+
+.cliente-dropdown {
+    -fx-text-fill: white;
+}
+
+.cliente-dropdown:expanded > .title {
+    -fx-background-radius: 8px 8px 0 0;
+    -fx-border-radius: 8px 8px 0 0;
+}
+
+.cliente-dropdown > *.content {
+    -fx-background-color: #3b4145;
+    -fx-background-radius: 0 0 8px 8px;
+    -fx-border-color: #59646b;
+    -fx-border-radius: 0 0 8px 8px;
+    -fx-border-width: 0 1px 1px 1px;
+    -fx-padding: 0 16px 16px 16px;
+}
+
+.cliente-dropdown > .title > .arrow-button .arrow {
+    -fx-background-color: white;
 }
 
 .cliente-header {
@@ -149,6 +172,7 @@
     -fx-text-fill: #172118;
     -fx-font-weight: 800;
     -fx-padding: 5px 8px;
+    -fx-font-size: 16px;
 }
 
 .servicos-lista {
@@ -178,7 +202,7 @@
 
 .servico-numero {
     -fx-text-fill: #5cc5fa;
-    -fx-font-size: 12px;
+    -fx-font-size: 1px;
 }
 
 .servico-valor {

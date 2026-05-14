@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<DialogPane xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.projeto_skala.Controller.ClienteEditDialogController">
+    <stylesheets>
+        <URL value="@MenuView.css" />
+    </stylesheets>
+    <content>
+        <VBox spacing="16" style="-fx-padding: 20;">
+            <Label text="Editar Cliente" style="-fx-font-size: 16; -fx-font-weight: bold;" />
+            
+            <VBox spacing="8">
+                <Label text="Nome:" style="-fx-font-weight: bold;" />
+                <TextField fx:id="nomeField" />
+            </VBox>
+            
+            <VBox spacing="8">
+                <Label text="Número:" style="-fx-font-weight: bold;" />
+                <TextField fx:id="numeroField" />
+            </VBox>
+            
+            <Separator />
+            
+            <Label text="Serviços:" style="-fx-font-weight: bold;" />
+            
+            <VBox spacing="10" fx:id="servicosContainer" style="-fx-border-color: #e0e0e0; -fx-border-radius: 4; -fx-padding: 10;" />
+            
+            <Button onAction="#adicionarServico" text="+ Adicionar Serviço" style="-fx-padding: 8;" />
+        </VBox>
+    </content>
+    <buttonTypes>OK, CANCEL</buttonTypes>
+</DialogPane>
