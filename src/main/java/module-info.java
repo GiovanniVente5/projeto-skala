@@ -10,6 +10,10 @@ module org.example.projeto_skala {
     requires com.dlsc.fxmlkit;
     requires org.apache.poi.poi;
     requires com.google.gson;
+    requires kernel;
+    requires java.desktop;
+    requires layout;
+    requires io;
 
     opens org.example.projeto_skala to javafx.fxml;
     opens org.example.projeto_skala.objetos to com.google.gson;

@@ -35,6 +35,38 @@ public class Empresas {
                '}';
     }
 
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public String getCNPJ() {
+        return CNPJ;
+    }
+
+    public void setCNPJ(String CNPJ) {
+        this.CNPJ = CNPJ;
+    }
+
+    public String getInscrCCM() {
+        return InscrCCM;
+    }
+
+    public void setInscrCCM(String inscrCCM) {
+        InscrCCM = inscrCCM;
+    }
+
+    public String getInscrEST() {
+        return InscrEST;
+    }
+
+    public void setInscrEST(String inscrEST) {
+        InscrEST = inscrEST;
+    }
+
     public String getNome() {
         return nome;
     }
