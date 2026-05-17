@@ -21,7 +21,7 @@ public class PDF {
                 "RUA BONIFACIO CUBAS  N°2289 - SÃO PAULO - SP - BRASIL",
                 "12.123.123/1234-12",
                 "1.123.123-1",
-                "ISENTO AAAAAAA",
+                "ISENTOAAAAAAA",
                 servicos
         );
 

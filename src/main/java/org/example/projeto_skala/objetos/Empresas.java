@@ -4,13 +4,24 @@ import java.util.List;
 import java.util.Map;
 
 public class Empresas {
-    String nome;
-    int num;
+    private String nome;
+    private int num;
     public String endereco;
     public String CNPJ;
     public String InscrCCM;
     public String InscrEST;
-    List<Servicos> servicos;
+    private List<Servicos> servicos;
+
+    public double[] valores(){
+        double comDesconto = 0;
+        double totalDoDesconto = 0;
+        for (Servicos servicos1 : servicos){
+            double temp = servicos1.getValor();
+            if (servicos1.getValor() < 0) temp += totalDoDesconto;
+            temp += comDesconto;
+        }
+        return new double[] {comDesconto,totalDoDesconto};
+    }
 
     public Empresas(String nome, int num, String endereco, String CNPJ, String inscrCCM, String inscrEST, List<Servicos> servicos) {
         this.nome = nome;
@@ -33,6 +44,30 @@ public class Empresas {
                ", InscrEST='" + InscrEST + '\'' +
                ", servicos=" + servicos +
                '}';
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
+    }
+
+    public List<Servicos> getServicos() {
+        return servicos;
+    }
+
+    public void setServicos(List<Servicos> servicos) {
+        this.servicos = servicos;
     }
 
     public String getEndereco() {
@@ -65,29 +100,5 @@ public class Empresas {
 
     public void setInscrEST(String inscrEST) {
         InscrEST = inscrEST;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public int getNum() {
-        return num;
-    }
-
-    public void setNum(int num) {
-        this.num = num;
-    }
-
-    public List<Servicos> getServicos() {
-        return servicos;
-    }
-
-    public void setServicos(List<Servicos> servicos) {
-        this.servicos = servicos;
     }
 }

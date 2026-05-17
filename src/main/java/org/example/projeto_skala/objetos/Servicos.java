@@ -43,4 +43,8 @@ public class Servicos {
     public void setValor(Double valor) {
         this.valor = valor;
     }
+
+    public boolean ger() {
+        return false;
+    }
 }
