@@ -6,7 +6,7 @@
 
     <groupId>org.example</groupId>
     <artifactId>Projeto_Skala</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>Projeto_Skala</name>
 
     <properties>
@@ -103,7 +103,34 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.pdf</include>
+                    <include>**/*.ttf</include>
+                    <include>**/*.TTF</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.example.projeto_skala.Launcher</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>./</classpathPrefix>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

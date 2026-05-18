@@ -19,18 +19,44 @@ Distribuição para usuários (ZIP portátil)
 
 Gerar instalador Windows (opcional)
 
-1. Para criar um instalador .exe com o runtime embutido, use o script:
-   ```bat
-   build-installer.bat
-   ```
-2. Pré-requisitos: JDK 17+ com jpackage no PATH e mvnw.cmd.
-3. O instalador ficará em `dist\installer\` (arquivo `.exe`). Distribua esse arquivo aos usuários; ele cria atalhos e instala para o usuário.
+1. Existem scripts no repositório para criar instaladores:
+   - `create-installer.bat` — empacotamento via `--main-jar` (modo não modular).
+   - `create-installer-module.bat` — para aplicações modulares / JavaFX (ajuste `JAVA_HOME` e `JAVAFX_SDK`).
+
+2. Pré-requisitos: JDK 14+ com `jpackage` no PATH e Maven (`mvn`) no PATH. Ajuste `JAVA_HOME` no topo dos scripts se necessário.
+
+3. Uso:
+   - Abra um Prompt de Comando na raiz do projeto e execute `create-installer.bat` ou `create-installer-module.bat` conforme o caso.
+   - O instalador (arquivo `.exe`) será gerado em `target\installer\`.
+
+Dica: se o JAR não for "fat" (sem dependências embutidas), prefira o modo modular ou coloque dependências na pasta `target` usada como `--input` para o `jpackage`.
 
 Gerar manualmente (alternativa)
 
 - Se preferir não usar os scripts, gere o JAR e use jpackage manualmente:
-  1. `mvnw.cmd clean package` (ou `mvn clean package`)
-  2. `jpackage --type app-image --input target --dest dist\portable --name SkalaConvertor --main-jar <ARTIFACT_JAR> --main-class org.example.projeto_skala.Launcher --icon src\main\resources\icon.ico`
+  1. mvn clean package (ou mvnw.cmd clean package)
+  2. jpackage (modo não modular):
+     jpackage --type exe --input target --dest target\installer --name Projeto_Skala --main-jar <ARTIFACT_JAR> --main-class org.example.projeto_skala.Launcher --win-shortcut --win-menu --icon src\main\resources\icon.ico
+  3. Exemplo modular (JavaFX):
+     jpackage --type exe --module org.example.projeto_skala/org.example.projeto_skala.Launcher --module-path "C:\\path\\to\\javafx-sdk-21\\lib;target\\mods" --add-modules javafx.controls,javafx.fxml --dest target\installer --name Projeto_Skala --win-shortcut --win-menu --icon src\main\resources\icon.ico
+
+  Exemplo PowerShell (Windows PowerShell / PowerShell Core):
+
+  # Ajuste JAVA_HOME se necessário
+  $env:JAVA_HOME = 'C:\\Program Files\\Java\\jdk-21'
+  $env:Path = $env:JAVA_HOME + '\\bin;' + $env:Path
+
+  # Build
+  mvn clean package -DskipTests
+
+  # Encontrar JAR (exemplo)
+  $jar = Get-ChildItem -Path .\\target -Filter *.jar -Recurse | Where-Object { $_.Name -notmatch 'sources|javadoc|original' } | Select-Object -First 1
+
+  # jpackage (modo não modular)
+  jpackage --type exe --input .\\target --dest .\\target\\installer --name Projeto_Skala --main-jar $jar.Name --main-class org.example.projeto_skala.Launcher --win-shortcut --win-menu --icon src\\main\\resources\\icon.ico
+
+  # jpackage (modular, JavaFX)
+  jpackage --type exe --module org.example.projeto_skala/org.example.projeto_skala.Launcher --module-path "C:\\path\\to\\javafx-sdk-21\\lib;target\\mods" --add-modules javafx.controls,javafx.fxml --dest target\\installer --name Projeto_Skala --win-shortcut --win-menu --icon src\\main\\resources\\icon.ico
 
 Observações importantes
 

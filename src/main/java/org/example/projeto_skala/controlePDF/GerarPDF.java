@@ -16,24 +16,31 @@ import com.itextpdf.kernel.geom.Rectangle;
 import org.example.projeto_skala.objetos.Empresas;
 import org.example.projeto_skala.objetos.Servicos;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.File;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class GerarPDF {
+    private static final String TEMPLATE_RESOURCE = "/org/example/projeto_skala/controlePDF/PdfTemplate/Recibo-Template.pdf";
+    private static final String FONT_RESOURCE = "/org/example/projeto_skala/controlePDF/PdfTemplate/ARIAL.TTF";
 
     public static void gerarRecibo(Empresas empresa, File outDir) throws IOException {
-        final String origem = "src/main/java/org/example/projeto_skala/controlePDF/PdfTemplate/Recibo-Template.pdf";
+        if (!outDir.exists() && !outDir.mkdirs()) {
+            throw new IOException("Nao foi possivel criar a pasta de destino: " + outDir.getAbsolutePath());
+        }
+
         String destino = outDir.getPath() + File.separator + "Empresa-Num-" + empresa.getNum() + ".pdf";
 
-        try (PdfReader reader = new PdfReader(origem);
+        try (InputStream template = abrirRecurso(TEMPLATE_RESOURCE);
+             PdfReader reader = new PdfReader(template);
              PdfWriter writer = new PdfWriter(destino);
              PdfDocument pdfDocument = new PdfDocument(reader, writer)) {
 
-            final String fontPath = "src/main/java/org/example/projeto_skala/controlePDF/PdfTemplate/ARIAL.TTF";
             PdfFont fonte = PdfFontFactory.createFont(
-                    fontPath, PdfEncodings.IDENTITY_H,
+                    carregarRecurso(FONT_RESOURCE), PdfEncodings.IDENTITY_H,
                     PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
             );
             PdfPage pagina = pdfDocument.getFirstPage();
@@ -88,6 +95,22 @@ public class GerarPDF {
 //          Liquido a receber
             escrever(canvas, fonte, String.valueOf(descontosSomados + subTotal), 487, 308, 100);
 
+        }
+    }
+
+    private static InputStream abrirRecurso(String caminho) throws IOException {
+        InputStream inputStream = GerarPDF.class.getResourceAsStream(caminho);
+
+        if (inputStream == null) {
+            throw new FileNotFoundException("Recurso nao encontrado no pacote: " + caminho);
+        }
+
+        return inputStream;
+    }
+
+    private static byte[] carregarRecurso(String caminho) throws IOException {
+        try (InputStream inputStream = abrirRecurso(caminho)) {
+            return inputStream.readAllBytes();
         }
     }
 
