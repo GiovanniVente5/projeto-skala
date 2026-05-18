@@ -68,6 +68,9 @@ public class GerarPDF {
             escrever(canvas, fonte, "INSCR. EST: : " + empresa.getInscrEST(), 207, 620, 150);
             escrever(canvas, fonte, "INSCR. CCM: : " + empresa.getInscrCCM(), 337, 620, 150);
 
+//          Numero empresa
+            escrever(canvas,pdfDocument,fonte,8,String.valueOf(empresa.getNum()),435,594,100);
+
 //          Serviços a serem pagos
             double descontosSomados = 0;
             double subTotal = 0;
