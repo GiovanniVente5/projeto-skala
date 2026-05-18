@@ -38,3 +38,13 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+# Application data (do not commit generated recibos)
+/data/RecibosGerados/
+
+# Java
+*.jar
+
+# Logs
+*.log
+
