@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -30,8 +31,13 @@ public class ClientesController {
     private VBox clientesContainer;
 
     @FXML
+    private ComboBox<String> periodoComboBox;
+
+    @FXML
     private void initialize() {
+        carregarPeriodos();
         carregarClientes();
+        periodoComboBox.setOnAction(e -> carregarClientes());
     }
 
     @FXML
@@ -42,14 +48,19 @@ public class ClientesController {
 
     @FXML
     private void atualizarClientes() {
+        carregarPeriodos();
         carregarClientes();
     }
 
-    @FXML
-    private void adicionarCliente() {
-        Empresas novaEmpresa = new Empresas("Novo Cliente", 0, "", "", "", "", new java.util.ArrayList<>());
-        abrirEditDialog(novaEmpresa, true);
+    private void carregarPeriodos() {
+        Map<String, List<Empresas>> empresasPorPeriodo = JsonCriar.carregarPorPeriodo();
+        java.util.List<String> periodos = new java.util.ArrayList<>(empresasPorPeriodo.keySet());
+        java.util.Collections.sort(periodos);
+        periodos.add(0, "Todos os períodos");
+        periodoComboBox.getItems().setAll(periodos);
+        periodoComboBox.getSelectionModel().selectFirst();
     }
+
 
     private void carregarClientes() {
         clientesContainer.getChildren().clear();
@@ -63,12 +74,32 @@ public class ClientesController {
             return;
         }
 
-        for (Map.Entry<String, List<Empresas>> periodo : empresasPorPeriodo.entrySet()) {
-            Label periodoLabel = new Label("Referencia: " + periodo.getKey());
+        String selecionado = periodoComboBox == null ? "Todos os períodos" : periodoComboBox.getSelectionModel().getSelectedItem();
+
+        if (selecionado == null || selecionado.equals("Todos os períodos")) {
+            for (Map.Entry<String, List<Empresas>> periodo : empresasPorPeriodo.entrySet()) {
+                Label periodoLabel = new Label("Referencia: " + periodo.getKey());
+                periodoLabel.getStyleClass().add("periodo-title");
+                clientesContainer.getChildren().add(periodoLabel);
+
+                for (Empresas empresa : periodo.getValue()) {
+                    clientesContainer.getChildren().add(criarCardCliente(empresa));
+                }
+            }
+        } else {
+            List<Empresas> lista = empresasPorPeriodo.get(selecionado);
+            if (lista == null || lista.isEmpty()) {
+                Label vazio = new Label("Nenhum cliente salvo para o período selecionado.");
+                vazio.getStyleClass().add("empty-state");
+                clientesContainer.getChildren().add(vazio);
+                return;
+            }
+
+            Label periodoLabel = new Label("Referencia: " + selecionado);
             periodoLabel.getStyleClass().add("periodo-title");
             clientesContainer.getChildren().add(periodoLabel);
 
-            for (Empresas empresa : periodo.getValue()) {
+            for (Empresas empresa : lista) {
                 clientesContainer.getChildren().add(criarCardCliente(empresa));
             }
         }

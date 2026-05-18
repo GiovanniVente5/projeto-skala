@@ -15,20 +15,18 @@
                 <Insets bottom="18" left="32" right="32" top="24" />
             </padding>
             <Button mnemonicParsing="false" onAction="#voltarMenu" text="Voltar" />
-            <Label styleClass="clientes-title" text="Clientes" HBox.hgrow="ALWAYS" />
-            <Button mnemonicParsing="false" onAction="#adicionarCliente" text="+ Adicionar" />
+            <Label styleClass="clientes-title" text="Clientes" />
+            <ComboBox fx:id="periodoComboBox" promptText="Período" HBox.hgrow="ALWAYS" />
             <Button mnemonicParsing="false" onAction="#atualizarClientes" text="Atualizar" />
         </HBox>
     </top>
     <center>
         <ScrollPane fitToWidth="true" hbarPolicy="NEVER" styleClass="clientes-scroll">
-            <content>
-                <VBox fx:id="clientesContainer" spacing="14">
-                    <padding>
-                        <Insets bottom="32" left="32" right="32" top="8" />
-                    </padding>
-                </VBox>
-            </content>
+            <VBox fx:id="clientesContainer" spacing="14">
+                <padding>
+                    <Insets bottom="32" left="32" right="32" top="8"/>
+                </padding>
+            </VBox>
         </ScrollPane>
     </center>
 </BorderPane>

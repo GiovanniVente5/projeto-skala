@@ -19,19 +19,9 @@
         <Label styleClass="drop-zone-subtitle" text="or click to choose .xlsx, .xls, .xlsm, or .csv" />
         <Label fx:id="selectedFileLabel" styleClass="selected-file" text="No file selected" />
     </VBox>
-    <HBox alignment="CENTER" maxWidth="460.0" spacing="12" styleClass="period-selector">
-        <VBox spacing="6" HBox.hgrow="ALWAYS">
-            <Label styleClass="field-label" text="Mes" />
-            <ComboBox fx:id="mesComboBox" maxWidth="Infinity" promptText="Mes" />
-        </VBox>
-        <VBox spacing="6">
-            <Label styleClass="field-label" text="Ano" />
-            <Spinner fx:id="anoSpinner" prefWidth="120.0" />
-        </VBox>
-    </HBox>
     <HBox alignment="CENTER" maxWidth="460.0" spacing="12" styleClass="menu-actions">
         <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#abrirTelaClientes" text="Cliente" HBox.hgrow="ALWAYS" />
-        <Button disable="true" maxWidth="Infinity" mnemonicParsing="false" text="Relatorios" HBox.hgrow="ALWAYS" />
+        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#abrirTelaRelatorios" text="Relatorios" HBox.hgrow="ALWAYS" />
     </HBox>
 
 </VBox>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="TOP_CENTER" spacing="16" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.projeto_skala.Controller.RelatoriosController">
+    <stylesheets>
+        <URL value="@MenuView.css" />
+    </stylesheets>
+    <padding>
+        <Insets top="24" right="32" bottom="24" left="32" />
+    </padding>
+    <HBox alignment="CENTER_LEFT" spacing="12" styleClass="clientes-toolbar">
+        <Button fx:id="voltarBtn" mnemonicParsing="false" onAction="#voltarMenu" text="Voltar" />
+        <Label styleClass="clientes-title" text="Relatórios" HBox.hgrow="ALWAYS" />
+        <Button fx:id="abrirPastaBtn" text="Abrir pasta de Recibos" />
+        <Button fx:id="gerarBtn" text="Gerar Recibos para todas as empresas" />
+    </HBox>
+    <Label fx:id="statusLabel"/>
+</VBox>

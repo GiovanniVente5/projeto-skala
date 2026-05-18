@@ -7,11 +7,18 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Window;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.util.Pair;
 import org.example.projeto_skala.Json.JsonCriar;
 import org.example.projeto_skala.Json.JsonServicos;
 import org.example.projeto_skala.SkalaApplication;
@@ -47,29 +54,8 @@ public class MenuController {
     private Label selectedFileLabel;
 
     @FXML
-    private ComboBox<String> mesComboBox;
-
-    @FXML
-    private Spinner<Integer> anoSpinner;
-
-    @FXML
     private void initialize() {
-        configureReferenciaImportacao();
         configureFileDropZone();
-    }
-
-    private void configureReferenciaImportacao() {
-        LocalDate hoje = LocalDate.now();
-
-        mesComboBox.getItems().setAll(MESES);
-        mesComboBox.getSelectionModel().select(hoje.getMonthValue() - 1);
-
-        anoSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(
-                hoje.getYear() - 20,
-                hoje.getYear() + 20,
-                hoje.getYear()
-        ));
-        anoSpinner.setEditable(true);
     }
 
     private void configureFileDropZone() {
@@ -128,13 +114,16 @@ public class MenuController {
     }
 
     private boolean selectSpreadsheetFile(File file) {
-        int mes = mesComboBox.getSelectionModel().getSelectedIndex() + 1;
-        Integer ano = getAnoSelecionado();
-
-        if (mes < 1 || ano == null) {
-            selectedFileLabel.setText("Selecione um mes e ano validos.");
+        // show modal dialog to select month and year when a spreadsheet is dropped
+        Pair<Integer, Integer> resultado = promptForMonthYear(file);
+        if (resultado == null) {
+            // user cancelled
+            selectedFileLabel.setText("Import cancelled.");
             return false;
         }
+
+        int mes = resultado.getKey();
+        int ano = resultado.getValue();
 
         selectedFileLabel.setText(file.getName() + " - " + String.format("%02d/%04d", mes, ano));
         List<Empresas> linhas = LerExcel.lerExcel(file);
@@ -143,15 +132,64 @@ public class MenuController {
         return true;
     }
 
-    private Integer getAnoSelecionado() {
-        try {
-            int ano = Integer.parseInt(anoSpinner.getEditor().getText());
-            anoSpinner.getValueFactory().setValue(ano);
-            return ano;
-        } catch (NumberFormatException e) {
+    private Pair<Integer,Integer> promptForMonthYear(File file) {
+        Dialog<Pair<Integer,Integer>> dialog = new Dialog<>();
+        dialog.setTitle("Selecionar referência");
+        dialog.setHeaderText("Selecione mês e ano para: " + file.getName());
+
+        ButtonType okType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(okType, ButtonType.CANCEL);
+
+        ComboBox<String> mesBox = new ComboBox<>();
+        mesBox.getItems().setAll(MESES);
+        mesBox.getSelectionModel().select(LocalDate.now().getMonthValue() - 1);
+
+        Spinner<Integer> anoBox = new Spinner<>();
+        anoBox.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(
+                LocalDate.now().getYear() - 20,
+                LocalDate.now().getYear() + 20,
+                LocalDate.now().getYear()
+        ));
+        anoBox.setEditable(true);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+        grid.add(new Label("Mês:"), 0, 0);
+        grid.add(mesBox, 1, 0);
+        grid.add(new Label("Ano:"), 0, 1);
+        grid.add(anoBox, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+
+        Node okButton = dialog.getDialogPane().lookupButton(okType);
+        okButton.setDisable(false);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == okType) {
+                try {
+                    int ano = Integer.parseInt(anoBox.getEditor().getText());
+                    return new Pair<>(mesBox.getSelectionModel().getSelectedIndex() + 1, ano);
+                } catch (NumberFormatException ex) {
+                    return null;
+                }
+            }
             return null;
-        }
+        });
+
+        return dialog.showAndWait().orElse(null);
     }
+
+//    private Integer getAnoSelecionado() {
+//        try {
+//            int ano = Integer.parseInt(anoSpinner.getEditor().getText());
+//            anoSpinner.getValueFactory().setValue(ano);
+//            return ano;
+//        } catch (NumberFormatException e) {
+//            return null;
+//        }
+//    }
 
     @FXML
     private void abrirTelaClientes() throws IOException {
@@ -160,10 +198,16 @@ public class MenuController {
     }
 
     @FXML
-    private void abrirTelaServicos() throws IOException {
-        Parent root = FXMLLoader.load(SkalaApplication.class.getResource("ServicosView.fxml"));
+    private void abrirTelaRelatorios() throws IOException {
+        Parent root = FXMLLoader.load(SkalaApplication.class.getResource("RelatoriosView.fxml"));
         dropZone.getScene().setRoot(root);
     }
+
+//    @FXML
+//    private void abrirTelaServicos() throws IOException {
+//        Parent root = FXMLLoader.load(SkalaApplication.class.getResource("ServicosView.fxml"));
+//        dropZone.getScene().setRoot(root);
+//    }
 
     private boolean hasSpreadsheetFile(List<File> files) {
         return findFirstSpreadsheetFile(files) != null;
