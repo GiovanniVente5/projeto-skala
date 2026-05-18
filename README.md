@@ -17,13 +17,22 @@ Distribuição para usuários (ZIP portátil)
    - Abra a pasta extraída e execute o launcher (ex.: `SkalaConvertor\SkalaConvertor.exe`) ou o arquivo `.exe` gerado.
    - Para conveniência, crie um atalho na Área de Trabalho.
 
+Gerar instalador Windows (opcional)
+
+1. Para criar um instalador .exe com o runtime embutido, use o script:
+   ```bat
+   build-installer.bat
+   ```
+2. Pré-requisitos: JDK 17+ com jpackage no PATH e mvnw.cmd.
+3. O instalador ficará em `dist\installer\` (arquivo `.exe`). Distribua esse arquivo aos usuários; ele cria atalhos e instala para o usuário.
+
 Gerar manualmente (alternativa)
 
-- Se preferir não usar o script, gere o JAR e use jpackage manualmente:
+- Se preferir não usar os scripts, gere o JAR e use jpackage manualmente:
   1. `mvnw.cmd clean package` (ou `mvn clean package`)
-  2. `jpackage --type app-image --input target --dest dist\portable --name SkalaConvertor --main-jar <ARTIFACT_JAR> --main-class org.example.projeto_skala.SkalaApplication --icon src\main\resources\icon.ico`
+  2. `jpackage --type app-image --input target --dest dist\portable --name SkalaConvertor --main-jar <ARTIFACT_JAR> --main-class org.example.projeto_skala.Launcher --icon src\main\resources\icon.ico`
 
-Notas importantes
+Observações importantes
 
 - A pasta `data/` contém os JSONs importados e é necessária para o funcionamento. A pasta `data/RecibosGerados/` é gerada e NÃO deve ser comitada.
 - Garanta que os templates e fontes (ex.: `ARIAL.TTF` e `PdfTemplate/Recibo-Template.pdf`) estejam presentes no repositório ou incluídos no pacote.
@@ -41,9 +50,9 @@ Compartilhar no GitHub (opcional)
    git push -u origin main
    ```
 
-2. Para automatizar builds e publicar artefatos, crie um workflow GitHub Actions que rode `mvn package` e `jpackage`, e publique o ZIP em Releases.
+2. Para automatizar builds e publicar artefatos, crie um workflow GitHub Actions que rode `mvn package` e `jpackage`, e publique o ZIP/em installador em Releases.
 
 Se quiser, eu:
-- Adiciono instruções de uso passo-a-passo no README em português com prints rápidos.
-- Crio um workflow GitHub Actions que gera o ZIP automaticamente em cada release.
+- Crio o workflow GitHub Actions que gera o ZIP e o instalador automaticamente em cada release.
+- Faço um commit com os scripts e um exemplo de release workflow.
 
