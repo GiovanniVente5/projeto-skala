@@ -6,6 +6,7 @@ import java.util.Map;
 public class Empresas {
     private String nome;
     private int num;
+
     public String endereco;
     public String CNPJ;
     public String InscrCCM;

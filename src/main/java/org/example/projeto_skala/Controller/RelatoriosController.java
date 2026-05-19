@@ -206,7 +206,7 @@ public class RelatoriosController {
             for (Empresas emp : entry.getValue()) {
                 completionService.submit(() -> {
                     try {
-                        GerarPDF.gerarRecibo(emp, outDir);
+//                        GerarPDF.gerarRecibo(emp, outDir);
                         return emp;
                     } catch (Exception ex) {
                         ex.printStackTrace();
