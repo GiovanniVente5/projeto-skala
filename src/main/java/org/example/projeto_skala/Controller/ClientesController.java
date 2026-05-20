@@ -262,7 +262,7 @@ public class ClientesController {
                 }
                 
                 Empresas empresaAtualizada = new Empresas(
-                    nome, numero, empresa.endereco, empresa.CNPJ, 
+                    nome,numero,empresa.getNumFatura(),empresa.getDiaVencimento(), empresa.endereco, empresa.CNPJ,
                     empresa.InscrCCM, empresa.InscrEST, servicos
                 );
                 

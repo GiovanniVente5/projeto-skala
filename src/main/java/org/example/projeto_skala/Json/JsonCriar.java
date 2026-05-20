@@ -77,7 +77,7 @@ public class JsonCriar {
         return empresasPorPeriodo;
     }
 
-    private static List<Empresas> carregarEmpresasExistentes(Gson gson, File jsonFile) {
+    public static List<Empresas> carregarEmpresasExistentes(Gson gson, File jsonFile) {
         if (!jsonFile.exists()) {
             return new ArrayList<>();
         }
@@ -97,7 +97,7 @@ public class JsonCriar {
         }
     }
 
-    private static File[] listarArquivosJson() {
+    public static File[] listarArquivosJson() {
         File dataFolder = new File(DATA_FOLDER);
 
         if (!dataFolder.exists()) {

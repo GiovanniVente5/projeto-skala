@@ -10,7 +10,7 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
+
 import com.itextpdf.layout.properties.TextAlignment;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.kernel.geom.Rectangle;
@@ -25,20 +25,19 @@ import java.io.InputStream;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
 import java.util.Locale;
 
 public class GerarPDF {
     private static final String TEMPLATE_RESOURCE = "/org/example/projeto_skala/controlePDF/PdfTemplate/Recibo-Template.pdf";
     private static final String FONT_RESOURCE = "/org/example/projeto_skala/controlePDF/PdfTemplate/ARIAL.TTF";
 
-//    public static void gerarRecibo(Empresas empresa, File outDir) throws IOException {
-    public static void gerarRecibo(Empresas empresa) throws IOException {
-//        if (!outDir.exists() && !outDir.mkdirs()) {
-//            throw new IOException("Nao foi possivel criar a pasta de destino: " + outDir.getAbsolutePath());
-//        }
+        public static void gerarRecibo(Empresas empresa, File outDir) throws IOException {
+        if (!outDir.exists() && !outDir.mkdirs()) {
+            throw new IOException("Nao foi possivel criar a pasta de destino: " + outDir.getAbsolutePath());
+        }
 
-//        String destino = outDir.getPath() + File.separator + "Empresa-Num-" + empresa.getNum() + ".pdf";
-        String destino = "data/recibosGerados/05-2026/Empresa-Num-" + empresa.getNum() + ".pdf";
+        String destino = outDir.getPath() + File.separator + "Empresa-Num-" + empresa.getNum() + ".pdf";
 
         try (InputStream template = abrirRecurso(TEMPLATE_RESOURCE);
              PdfReader reader = new PdfReader(template);
@@ -46,7 +45,7 @@ public class GerarPDF {
              PdfDocument pdfDocument = new PdfDocument(reader, writer)) {
 
             PdfFont fonte = PdfFontFactory.createFont(
-                    carregarRecurso(FONT_RESOURCE), PdfEncodings.IDENTITY_H,
+                    carregarRecurso(), PdfEncodings.IDENTITY_H,
                     PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
             );
             PdfPage pagina = pdfDocument.getFirstPage();
@@ -60,12 +59,10 @@ public class GerarPDF {
             escrever(canvas, fonte, dataFormatada, 450, 738, 100);
 
 //          Numero fatura
-            escrever(canvas, fonte, String.valueOf(empresa.getNum() + hoje.getDayOfMonth()), 460, 724, 100);
+            escrever(canvas, fonte, String.valueOf(empresa.getNumFatura()), 460, 724, 100);
 
 //          Vencimento
-            LocalDate mes = hoje.plusMonths(1);
-            String dataFormatada1 = mes.format(formato);
-            escrever(canvas, fonte, dataFormatada1, 465, 711, 100);
+            escrever(canvas, fonte, empresa.calcularVencimento().format(formato), 465, 711, 100);
 
 //          Dados cliente
             escrever(canvas, fonte, empresa.getNome(), 68, 640, 400);
@@ -84,35 +81,36 @@ public class GerarPDF {
             Document valoresDoc = new Document(pdfDocument).setFont(fonte).setFontSize(8).setTextAlignment(TextAlignment.RIGHT);
             valoresDoc.setMargins(252, 44, 10, 160);
 
-            NumberFormat nf = NumberFormat.getInstance(new Locale("pt","BR"));
+            NumberFormat nf = NumberFormat.getInstance(new Locale("pt", "BR"));
             nf.setMinimumFractionDigits(2);
             nf.setMaximumFractionDigits(2);
 
             double descontosSomados = 0;
             double subTotal = 0;
 
-            for (Servicos servicos : empresa.getServicos())  {
+            for (Servicos servicos : empresa.getServicos()) {
 
                 servicosDoc.add(new Paragraph(servicos.getNome()));
                 valoresDoc.add(new Paragraph(nf.format(servicos.getValor())));
                 valoresDoc.add(new Paragraph(""));
 
                 double valor = servicos.getValor();
-                if (valor < 0) descontosSomados += valor; else subTotal += valor;
+                if (valor < 0) descontosSomados += valor;
+                else subTotal += valor;
             }
 
 //          todos os descontos
-            valoresDoc.add(new Paragraph(nf.format(descontosSomados)).setFixedPosition(502,408,50));
+            valoresDoc.add(new Paragraph(nf.format(descontosSomados)).setFixedPosition(502, 408, 50));
 
 
 //          SubTotal
-            valoresDoc.add(new Paragraph(nf.format(subTotal)).setFixedPosition(502,375,50));
+            valoresDoc.add(new Paragraph(nf.format(subTotal)).setFixedPosition(502, 375, 50));
 
 //          Descontos
-            valoresDoc.add(new Paragraph(nf.format(descontosSomados)).setFixedPosition(502,325,50));
+            valoresDoc.add(new Paragraph(nf.format(descontosSomados)).setFixedPosition(502, 325, 50));
 
 //          Liquido a receber
-            valoresDoc.add(new Paragraph(nf.format(descontosSomados + subTotal)).setFixedPosition(502,308,50));
+            valoresDoc.add(new Paragraph(nf.format(descontosSomados + subTotal)).setFixedPosition(502, 308, 50));
 
 
         }
@@ -128,8 +126,8 @@ public class GerarPDF {
         return inputStream;
     }
 
-    private static byte[] carregarRecurso(String caminho) throws IOException {
-        try (InputStream inputStream = abrirRecurso(caminho)) {
+    private static byte[] carregarRecurso() throws IOException {
+        try (InputStream inputStream = abrirRecurso(GerarPDF.FONT_RESOURCE)) {
             return inputStream.readAllBytes();
         }
     }

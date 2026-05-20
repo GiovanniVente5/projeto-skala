@@ -111,6 +111,8 @@ public class ClienteEditDialogController {
         return new Empresas(
             nome,
             numero,
+            empresa.getNumFatura(),
+            empresa.getDiaVencimento(),
             empresa.endereco,
             empresa.CNPJ,
             empresa.InscrCCM,
