@@ -1,14 +1,9 @@
 package org.example.projeto_skala.objetos;
 
-import com.google.gson.Gson;
-import org.example.projeto_skala.Json.JsonCriar;
-
-import java.io.File;
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.time.YearMonth;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Empresas {
     private String nome;
@@ -60,6 +55,14 @@ public class Empresas {
             vencimento = proximoMes.atDay(diaAjustado);
         }
         return vencimento;
+    }
+
+    public double getValorTotal(){
+        double valorTotal = 0;
+        for (Servicos serv : servicos){
+            valorTotal += serv.getValor();
+        }
+        return valorTotal;
     }
 
     public int getDiaVencimento() {

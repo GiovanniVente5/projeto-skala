@@ -15,9 +15,9 @@
     <Label styleClass="title" text="Skala Convertor" />
     <VBox fx:id="dropZone" alignment="CENTER" maxWidth="460.0" minHeight="220.0" spacing="12" styleClass="drop-zone">
         <Label styleClass="drop-zone-icon" text="XLS" />
-        <Label styleClass="drop-zone-title" text="Drag and drop an Excel file here" />
-        <Label styleClass="drop-zone-subtitle" text="or click to choose .xlsx, .xls, .xlsm, or .csv" />
-        <Label fx:id="selectedFileLabel" styleClass="selected-file" text="No file selected" />
+        <Label styleClass="drop-zone-title" text="Arraste e coloque um arquivo excel aqui" />
+        <Label styleClass="drop-zone-subtitle" text="ou clique e escolha um arquivo .xlsx, .xls, .xlsm, or .csv" />
+        <Label fx:id="selectedFileLabel" styleClass="selected-file" text="Nenhum arquivo selecionado" />
     </VBox>
     <HBox alignment="CENTER" maxWidth="460.0" spacing="12" styleClass="menu-actions">
         <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#abrirTelaClientes" text="Cliente" HBox.hgrow="ALWAYS" />

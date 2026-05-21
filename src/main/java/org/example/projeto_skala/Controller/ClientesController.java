@@ -68,7 +68,7 @@ public class ClientesController {
         Map<String, List<Empresas>> empresasPorPeriodo = JsonCriar.carregarPorPeriodo();
 
         if (empresasPorPeriodo.isEmpty()) {
-            Label vazio = new Label("Nenhum cliente salvo no JSON.");
+            Label vazio = new Label("Nenhum cliente salvo no histórico.");
             vazio.getStyleClass().add("empty-state");
             clientesContainer.getChildren().add(vazio);
             return;
@@ -114,6 +114,7 @@ public class ClientesController {
         card.setExpanded(false);
         card.setMaxWidth(Double.MAX_VALUE);
         card.setText("");
+
 
         HBox cabecalho = new HBox(12);
         cabecalho.getStyleClass().add("cliente-header");
@@ -189,9 +190,11 @@ public class ClientesController {
         try {
             Dialog<javafx.scene.control.ButtonType> dialog = new Dialog<>();
             dialog.setTitle(isNovoCliente ? "Novo Cliente" : "Editar Cliente");
-            
+            dialog.setResizable(true);
+
             VBox content = new VBox(12);
             content.setStyle("-fx-padding: 15;");
+
             
             HBox nomeBox = new HBox(10);
             Label nomeLbl = new Label("Nome:");

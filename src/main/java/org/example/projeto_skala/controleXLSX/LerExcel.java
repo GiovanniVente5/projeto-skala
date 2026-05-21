@@ -79,7 +79,7 @@ public class LerExcel {
                 numFatura ++;
 
             }
-            sheet0.getRow(0).getCell(3).setCellValue(String.valueOf(numFatura + 1));
+            sheet0.getRow(0).getCell(3).setCellValue(String.valueOf(numFatura));
             try (FileOutputStream fos = new FileOutputStream(file)){
                 workbook.write(fos);
             }

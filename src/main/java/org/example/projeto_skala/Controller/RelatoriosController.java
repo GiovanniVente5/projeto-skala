@@ -22,11 +22,14 @@ import javafx.geometry.Insets;
 import org.example.projeto_skala.Json.JsonCriar;
 import org.example.projeto_skala.SkalaApplication;
 import org.example.projeto_skala.controlePDF.GerarPDF;
+import org.example.projeto_skala.controleTXT.gerarTXT;
 import org.example.projeto_skala.objetos.Empresas;
 
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -44,7 +47,13 @@ public class RelatoriosController {
     @FXML
     private void initialize() {
         abrirPastaBtn.setOnAction(e -> abrirPastaRecibos());
-        gerarBtn.setOnAction(e -> gerarRecibos());
+        gerarBtn.setOnAction(e -> {
+            try {
+                gerarRecibos();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
     }
 
     private void abrirPastaRecibos() {
@@ -74,7 +83,7 @@ public class RelatoriosController {
         gerarBtn.getScene().setRoot(root);
     }
 
-    private void gerarRecibos() {
+    private void gerarRecibos() throws IOException {
         Map<String, List<Empresas>> empresasPorPeriodo = JsonCriar.carregarPorPeriodo();
         if (empresasPorPeriodo.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -202,18 +211,20 @@ public class RelatoriosController {
             }
             File outDir = new File("data" + File.separator + "RecibosGerados" + File.separator + folderName);
             if (!outDir.exists()) outDir.mkdirs();
-
             for (Empresas emp : entry.getValue()) {
-                completionService.submit(() -> {
-                    try {
-                        GerarPDF.gerarRecibo(emp, outDir);
-                        return emp;
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        return emp;
-                    }
-                });
+
+                    completionService.submit(() -> {
+                        try {
+                            GerarPDF.gerarRecibo(emp, outDir);
+                            return emp;
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            return emp;
+                        }
+                    });
             }
+            System.out.println(outDir.getPath());
+            gerarTXT.gerarRelatorio(entry.getValue(), outDir.getPath(),"Relatório");
         }
 
         // monitor completion
