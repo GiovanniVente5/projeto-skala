@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class Empresas {
+    public int id;
     private String nome;
     private int num;
     private long numFatura;
@@ -15,6 +16,19 @@ public class Empresas {
     public String InscrCCM;
     public String InscrEST;
     private List<Servicos> servicos;
+
+    public Empresas(int id,String nome, int num, long numFatura, int diaVencimento, String endereco, String CNPJ, String inscrCCM, String inscrEST, List<Servicos> servicos) {
+        this.id = id;
+        this.nome = nome;
+        this.num = num;
+        this.numFatura = numFatura;
+        this.diaVencimento = diaVencimento;
+        this.endereco = endereco;
+        this.CNPJ = CNPJ;
+        InscrCCM = inscrCCM;
+        InscrEST = inscrEST;
+        this.servicos = servicos;
+    }
 
     public Empresas(String nome, int num, long numFatura, int diaVencimento, String endereco, String CNPJ, String inscrCCM, String inscrEST, List<Servicos> servicos) {
         this.nome = nome;
@@ -54,6 +68,11 @@ public class Empresas {
             diaAjustado = Math.min(diaVencimento, proximoMes.lengthOfMonth());
             vencimento = proximoMes.atDay(diaAjustado);
         }
+
+        if (diaAjustado > mesAtual.plusMonths(1).lengthOfMonth()){
+            diaAjustado = mesAtual.plusMonths(1).lengthOfMonth();
+        }
+
         return vencimento;
     }
 
@@ -63,6 +82,10 @@ public class Empresas {
             valorTotal += serv.getValor();
         }
         return valorTotal;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getDiaVencimento() {

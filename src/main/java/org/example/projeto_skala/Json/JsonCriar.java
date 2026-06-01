@@ -42,11 +42,11 @@ public class JsonCriar {
         Map<Integer, Empresas> empresasPorNumero = new LinkedHashMap<>();
 
         for (Empresas empresa : empresasAntigas) {
-            empresasPorNumero.put(empresa.getNum(), empresa);
+            empresasPorNumero.put(empresa.getId(), empresa);
         }
 
         for (Empresas empresa : empresasNovas) {
-            empresasPorNumero.put(empresa.getNum(), empresa);
+            empresasPorNumero.put(empresa.getId(), empresa);
         }
 
         try (FileWriter writer = new FileWriter(jsonFile)) {

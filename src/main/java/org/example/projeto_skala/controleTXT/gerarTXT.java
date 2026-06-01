@@ -46,13 +46,10 @@ public class gerarTXT {
                 Files.writeString(caminho,"\n",StandardOpenOption.APPEND);
                 diaAnterior = emp.getDiaVencimento();
             }
-
             String empresasTXT = formatarLinha(emp.getNum(),emp.getNome(),formato.format(emp.calcularVencimento()),emp.getNumFatura(),nf.format(emp.getValorTotal()));
             Files.writeString(caminho,
                     "\n" + empresasTXT, StandardOpenOption.APPEND);
         }
-
-
     }
 
     private static String formatarLinha(int numEmp, String nomeEmp, String vencimento, long numFatura, String valorTotal) {

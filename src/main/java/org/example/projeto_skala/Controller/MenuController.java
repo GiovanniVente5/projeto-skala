@@ -129,6 +129,7 @@ public class MenuController {
         List<Empresas> linhas = LerExcel.lerExcel(file);
         JsonCriar.salvar(linhas, mes, ano);
         JsonServicos.sincronizarComEmpresas(linhas);
+
         return true;
     }
 
@@ -181,15 +182,6 @@ public class MenuController {
         return dialog.showAndWait().orElse(null);
     }
 
-//    private Integer getAnoSelecionado() {
-//        try {
-//            int ano = Integer.parseInt(anoSpinner.getEditor().getText());
-//            anoSpinner.getValueFactory().setValue(ano);
-//            return ano;
-//        } catch (NumberFormatException e) {
-//            return null;
-//        }
-//    }
 
     @FXML
     private void abrirTelaClientes() throws IOException {
@@ -202,12 +194,6 @@ public class MenuController {
         Parent root = FXMLLoader.load(SkalaApplication.class.getResource("RelatoriosView.fxml"));
         dropZone.getScene().setRoot(root);
     }
-
-//    @FXML
-//    private void abrirTelaServicos() throws IOException {
-//        Parent root = FXMLLoader.load(SkalaApplication.class.getResource("ServicosView.fxml"));
-//        dropZone.getScene().setRoot(root);
-//    }
 
     private boolean hasSpreadsheetFile(List<File> files) {
         return findFirstSpreadsheetFile(files) != null;

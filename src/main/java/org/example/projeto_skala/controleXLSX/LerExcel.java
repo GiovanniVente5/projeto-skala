@@ -41,6 +41,7 @@ public class LerExcel {
 
 //          LENDO EMPRESAS
             long numFatura = 1;
+            int id = 1;
             for (Row row : sheet0) {
                 if (row.getRowNum() == 0){
                     numFatura = (long) Double.parseDouble(getValorCell(row.getCell(3)));
@@ -75,8 +76,11 @@ public class LerExcel {
                     }
                 }
 
-                linhas.add(new Empresas(nome,num,numFatura,diaVencimento,endereco,CNPJ,InscrCCM,InscrEST,servicos));
-                numFatura ++;
+                if (!servicos.isEmpty()) {
+                    linhas.add(new Empresas(id,nome, num, numFatura, diaVencimento, endereco, CNPJ, InscrCCM, InscrEST, servicos));
+                    id++;
+                    numFatura++;
+                }
 
             }
             sheet0.getRow(0).getCell(3).setCellValue(String.valueOf(numFatura));
