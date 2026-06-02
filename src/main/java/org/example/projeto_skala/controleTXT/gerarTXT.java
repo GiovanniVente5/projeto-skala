@@ -1,8 +1,6 @@
 package org.example.projeto_skala.controleTXT;
 
 import org.example.projeto_skala.objetos.Empresas;
-
-import javax.swing.text.DateFormatter;
 import java.io.IOException;
 import java.nio.file.*;
 import java.text.NumberFormat;
@@ -10,7 +8,6 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -30,7 +27,7 @@ public class gerarTXT {
 
         int diaAjustado = Math.min(empresas.getFirst().getDiaVencimento(), mesAtual.lengthOfMonth());
         LocalDate vencimentoDiaUm = mesAtual.atDay(diaAjustado);
-        LocalDate vencimentoDiaDois = mesAtual.atDay(Math.max(31, mesAtual.lengthOfMonth()));
+        LocalDate vencimentoDiaDois = mesAtual.atDay(mesAtual.lengthOfMonth());
 
         String cabecalho = String.format("%-4s | %-70s | %-10s | %-7s | %-6s",
                 "N°","Nome","Vencimento","N° Fatura","Valor");

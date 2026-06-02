@@ -3,7 +3,6 @@ package org.example.projeto_skala.objetos;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class Empresas {
     private String nome;
@@ -54,6 +53,11 @@ public class Empresas {
             diaAjustado = Math.min(diaVencimento, proximoMes.lengthOfMonth());
             vencimento = proximoMes.atDay(diaAjustado);
         }
+
+        if (diaAjustado > mesAtual.plusMonths(1).lengthOfMonth()){
+            diaAjustado = mesAtual.plusMonths(1).lengthOfMonth();
+        }
+
         return vencimento;
     }
 
@@ -69,17 +73,13 @@ public class Empresas {
         return diaVencimento;
     }
 
-    public void setDiaVencimento(int diaVencimento) {
-        this.diaVencimento = diaVencimento;
-    }
+
 
     public long getNumFatura() {
         return numFatura;
     }
 
-    public void setNumFatura(long numFatura) {
-        this.numFatura = numFatura;
-    }
+
 
     public String getNome() {
         return nome;
@@ -93,47 +93,35 @@ public class Empresas {
         return num;
     }
 
-    public void setNum(int num) {
-        this.num = num;
-    }
+
 
     public List<Servicos> getServicos() {
         return servicos;
     }
 
-    public void setServicos(List<Servicos> servicos) {
-        this.servicos = servicos;
-    }
+
 
     public String getEndereco() {
         return endereco;
     }
 
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
-    }
+
 
     public String getCNPJ() {
         return CNPJ;
     }
 
-    public void setCNPJ(String CNPJ) {
-        this.CNPJ = CNPJ;
-    }
+
 
     public String getInscrCCM() {
         return InscrCCM;
     }
 
-    public void setInscrCCM(String inscrCCM) {
-        InscrCCM = inscrCCM;
-    }
+
 
     public String getInscrEST() {
         return InscrEST;
     }
 
-    public void setInscrEST(String inscrEST) {
-        InscrEST = inscrEST;
-    }
+
 }

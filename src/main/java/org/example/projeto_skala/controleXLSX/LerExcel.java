@@ -74,10 +74,10 @@ public class LerExcel {
                         servicos.add(new Servicos(servicosNome.get(chave), chave, Double.parseDouble(valorServico)));
                     }
                 }
-
-                linhas.add(new Empresas(nome,num,numFatura,diaVencimento,endereco,CNPJ,InscrCCM,InscrEST,servicos));
-                numFatura ++;
-
+                if (!servicos.isEmpty()) {
+                    linhas.add(new Empresas(nome, num, numFatura, diaVencimento, endereco, CNPJ, InscrCCM, InscrEST, servicos));
+                    numFatura++;
+                }
             }
             sheet0.getRow(0).getCell(3).setCellValue(String.valueOf(numFatura));
             try (FileOutputStream fos = new FileOutputStream(file)){
