@@ -5,6 +5,7 @@ import java.time.YearMonth;
 import java.util.List;
 
 public class Empresas {
+    private int id;
     private String nome;
     private int num;
     private long numFatura;
@@ -16,6 +17,19 @@ public class Empresas {
     private List<Servicos> servicos;
 
     public Empresas(String nome, int num, long numFatura, int diaVencimento, String endereco, String CNPJ, String inscrCCM, String inscrEST, List<Servicos> servicos) {
+        this.nome = nome;
+        this.num = num;
+        this.numFatura = numFatura;
+        this.diaVencimento = diaVencimento;
+        this.endereco = endereco;
+        this.CNPJ = CNPJ;
+        InscrCCM = inscrCCM;
+        InscrEST = inscrEST;
+        this.servicos = servicos;
+    }
+
+    public Empresas(int id, String nome, int num, long numFatura, int diaVencimento, String endereco, String CNPJ, String inscrCCM, String inscrEST, List<Servicos> servicos) {
+        this.id = id;
         this.nome = nome;
         this.num = num;
         this.numFatura = numFatura;
@@ -93,7 +107,13 @@ public class Empresas {
         return num;
     }
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public List<Servicos> getServicos() {
         return servicos;
