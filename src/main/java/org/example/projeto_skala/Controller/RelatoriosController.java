@@ -223,8 +223,8 @@ public class RelatoriosController {
                         }
                     });
             }
-            System.out.println(outDir.getPath());
             gerarTXT.gerarRelatorio(entry.getValue(), outDir.getPath(),"Relatório");
+            System.out.println(outDir.getPath());
         }
 
         // monitor completion

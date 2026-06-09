@@ -12,7 +12,7 @@
     <padding>
         <Insets bottom="48" left="64" right="64" top="48" />
     </padding>
-    <Label styleClass="title" text="Skala Convertor" />
+    <Label styleClass="title" text="NovaSkala Conversor" />
     <VBox fx:id="dropZone" alignment="CENTER" maxWidth="460.0" minHeight="220.0" spacing="12" styleClass="drop-zone">
         <Label styleClass="drop-zone-icon" text="XLS" />
         <Label styleClass="drop-zone-title" text="Arraste e coloque um arquivo excel aqui" />
