@@ -14,6 +14,7 @@ module org.example.projeto_skala {
     requires java.desktop;
     requires layout;
     requires io;
+    requires org.apache.poi.ooxml;
 
     opens org.example.projeto_skala to javafx.fxml;
     opens org.example.projeto_skala.objetos to com.google.gson;

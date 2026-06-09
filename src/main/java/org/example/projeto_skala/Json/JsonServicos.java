@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -28,7 +29,8 @@ public class JsonServicos {
         }
 
         try (FileReader reader = new FileReader(jsonFile)) {
-            Type listType = new TypeToken<List<Servicos>>() {}.getType();
+            Type listType = new TypeToken<List<Servicos>>() {
+            }.getType();
             List<Servicos> servicos = new Gson().fromJson(reader, listType);
 
             if (servicos == null) {
@@ -47,7 +49,11 @@ public class JsonServicos {
         dataFolder.mkdirs();
 
         try (FileWriter writer = new FileWriter(JSON_PATH)) {
-            new GsonBuilder().setPrettyPrinting().create().toJson(servicos, writer);
+            new GsonBuilder()
+                    .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                    .setPrettyPrinting()
+                    .create().
+                    toJson(servicos, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }

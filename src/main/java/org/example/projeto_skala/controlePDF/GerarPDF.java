@@ -20,6 +20,8 @@ import com.itextpdf.kernel.geom.Rectangle;
 
 import com.itextpdf.layout.properties.UnitValue;
 import com.itextpdf.layout.properties.VerticalAlignment;
+
+
 import org.example.projeto_skala.objetos.Empresas;
 import org.example.projeto_skala.objetos.Servicos;
 
@@ -28,7 +30,7 @@ import java.io.IOException;
 import java.io.File;
 import java.io.InputStream;
 import java.text.NumberFormat;
-import java.time.LocalDate;
+
 import java.time.format.DateTimeFormatter;
 
 import java.util.Locale;
@@ -48,22 +50,16 @@ public class GerarPDF {
 
         String destino = outDir.getPath() + File.separator + "Empresa-" + empresa.getNum() + "-Fatura-" + empresa.getNumFatura() + ".pdf";
 
-        try (InputStream template = abrirRecurso(TEMPLATE_RESOURCE);
-             PdfReader reader = new PdfReader(template);
-             PdfWriter writer = new PdfWriter(destino);
-             PdfDocument pdfDocument = new PdfDocument(reader, writer)) {
+        try (InputStream template = abrirRecurso(TEMPLATE_RESOURCE); PdfReader reader = new PdfReader(template); PdfWriter writer = new PdfWriter(destino); PdfDocument pdfDocument = new PdfDocument(reader, writer)) {
 
-            PdfFont fonte = PdfFontFactory.createFont(
-                    carregarRecurso(), PdfEncodings.IDENTITY_H,
-                    PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED
-            );
+            PdfFont fonte = PdfFontFactory.createFont(carregarRecurso(), PdfEncodings.IDENTITY_H, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
             PdfPage pagina = pdfDocument.getFirstPage();
             PdfCanvas canvas = new PdfCanvas(pagina);
 
 //          Emissão
-            LocalDate hoje = LocalDate.now();
+
             DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String dataFormatada = hoje.format(formato);
+            String dataFormatada = empresa.getEmissao().format(formato);
 
             escrever(canvas, fonte, new Paragraph(dataFormatada), 450, 737, 100);
 
@@ -74,7 +70,24 @@ public class GerarPDF {
             escrever(canvas, fonte, new Paragraph(empresa.calcularVencimento().format(formato)), 465, 710, 100);
 
 //          Dados cliente
-            escrever(canvas, fonte, new Paragraph(empresa.getNome()).setBold(), 68, 640, 600);
+            if (empresa.getNome().length() > 90) {
+                String linha1 = null;
+                String linha2 = null;
+                char[] nomeChar = empresa.getNome().toCharArray();
+
+                for (int i = 75; i < 91; i++) {
+                    char tempChar = nomeChar[i];
+                    if (tempChar == ' ') {
+                        linha1 = empresa.getNome().substring(0, i);
+                        linha2 = empresa.getNome().substring(i);
+                    }
+                }
+
+                escrever(canvas, fonte, new Paragraph(linha1).setBold(), 68, 650, 490);
+                escrever(canvas, fonte, new Paragraph(linha2).setBold(), 68, 640, 500);
+            } else {
+                escrever(canvas, fonte, new Paragraph(empresa.getNome()).setBold(), 68, 640, 500);
+            }
             escrever(canvas, fonte, new Paragraph(empresa.getEndereco()), 68, 630, 400);
             escrever(canvas, fonte, new Paragraph("CNPJ/MF: " + empresa.getCNPJ()), 68, 620, 150);
             escrever(canvas, fonte, new Paragraph("INSCR. EST: " + empresa.getInscrEST()), 207, 620, 150);
@@ -104,10 +117,8 @@ public class GerarPDF {
 
             for (Servicos servico : empresa.getServicos()) {
                 if (servico.getValor() > 0) {
-                    tabela.addCell(
-                            celulaSemBorda(servico.getNome(), fonte,TextAlignment.LEFT));
-                    tabela.addCell(
-                            celulaSemBorda(nf.format(servico.getValor()), fonte,TextAlignment.RIGHT));
+                    tabela.addCell(celulaSemBorda(servico.getNome(), fonte, TextAlignment.LEFT));
+                    tabela.addCell(celulaSemBorda(nf.format(servico.getValor()), fonte, TextAlignment.RIGHT));
                     subTotal += servico.getValor();
                 } else {
                     descontosSomados += servico.getValor();
@@ -148,28 +159,15 @@ public class GerarPDF {
         }
     }
 
-    private static void escrever(PdfCanvas pdfCanvas,
-                                 PdfFont fonte,
-                                 Paragraph texto, float x, float y,
-                                 float largura){
+    private static void escrever(PdfCanvas pdfCanvas, PdfFont fonte, Paragraph texto, float x, float y, float largura) {
         Rectangle area = new Rectangle(x, y, largura, (float) 8 + 4);
 
         try (Canvas canvas = new Canvas(pdfCanvas, area)) {
-            canvas.add(texto
-                    .setFont(fonte)
-                    .setFontSize((float) 8)
-                    .setTextAlignment(TextAlignment.LEFT)
-                    .setMargin(0));
+            canvas.add(texto.setFont(fonte).setFontSize((float) 8).setTextAlignment(TextAlignment.LEFT).setMargin(0));
         }
     }
 
     static Cell celulaSemBorda(String texto, PdfFont fonte, TextAlignment alinhamento) {
-        return new Cell()
-                .add(new Paragraph(texto).setFont(fonte).setFontSize(8))
-                .setBorder(NO_BORDER)
-                .setTextAlignment(alinhamento)
-                .setVerticalAlignment(VerticalAlignment.MIDDLE)
-                .setPaddingTop(6f)
-                .setPaddingBottom(6f);
+        return new Cell().add(new Paragraph(texto).setFont(fonte).setFontSize(8)).setBorder(NO_BORDER).setTextAlignment(alinhamento).setVerticalAlignment(VerticalAlignment.MIDDLE).setPaddingTop(6f).setPaddingBottom(6f);
     }
 }

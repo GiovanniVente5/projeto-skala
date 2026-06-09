@@ -18,6 +18,7 @@ public class LerExcel {
             Sheet sheet0 = workbook.getSheetAt(0);
             Sheet sheet1 = workbook.getSheetAt(1);
 
+            coordenadasCell cord = new coordenadasCell(sheet0);
             Map<Integer, String> servicosNome = new HashMap<>();
 //          LENDO SERVIÇOS
             for (Row row : sheet1) {
@@ -41,10 +42,10 @@ public class LerExcel {
 
 //          LENDO EMPRESAS
             int id = 1;
-            long numFatura = 1;
+            long numFatura = 0;
             for (Row row : sheet0) {
                 if (row.getRowNum() == 0){
-                    numFatura = (long) Double.parseDouble(getValorCell(row.getCell(3)));
+                    numFatura = (long) Double.parseDouble(getValorCell(row.getCell(cord.getCoordenada())));
                 }
                 if (row.getRowNum() <= 1 || getValorCell(row.getCell(0)).isEmpty()) {
                     continue;
@@ -76,13 +77,14 @@ public class LerExcel {
                     }
                 }
                 if (!servicos.isEmpty()) {
-                    linhas.add(new Empresas(id,nome, num, numFatura, diaVencimento, endereco, CNPJ, InscrCCM, InscrEST, servicos));
+                    Empresas emp = new Empresas (id, nome, num, numFatura, diaVencimento,cord.mesVencimento,cord.getDataEmissao(), endereco, CNPJ, InscrCCM, InscrEST, servicos);
+                    linhas.add(emp);
                     numFatura++;
                     id++;
                 }
             }
-            sheet0.getRow(0).getCell(3).setCellValue(String.valueOf(numFatura));
-            try (FileOutputStream fos = new FileOutputStream(file)){
+            sheet0.getRow(0).getCell(cord.getCoordenada()).setCellValue(numFatura+cord.getFatura());
+            try (FileOutputStream fos = new FileOutputStream(file)) {
                 workbook.write(fos);
             }
         } catch (Exception e) {
@@ -119,3 +121,4 @@ public class LerExcel {
         }
     }
 }
+

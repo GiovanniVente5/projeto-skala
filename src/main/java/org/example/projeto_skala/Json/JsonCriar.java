@@ -23,15 +23,13 @@ public class JsonCriar {
     private static final String JSON_EXTENSION = ".json";
     private static final String DEFAULT_JSON_NAME = JSON_PREFIX + JSON_EXTENSION;
 
-    public static void salvar(List<Empresas> empresasNovas) {
-        LocalDate hoje = LocalDate.now();
-        salvar(empresasNovas, hoje.getMonthValue(), hoje.getYear());
-    }
-
     public static void salvar(List<Empresas> empresasNovas, int mes, int ano) {
         validarReferencia(mes, ano);
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .setPrettyPrinting()
+                .create();
 
         File dataFolder = new File(DATA_FOLDER);
         dataFolder.mkdirs();
@@ -54,16 +52,6 @@ public class JsonCriar {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static List<Empresas> carregar() {
-        List<Empresas> empresas = new ArrayList<>();
-
-        for (List<Empresas> empresasDoPeriodo : carregarPorPeriodo().values()) {
-            empresas.addAll(empresasDoPeriodo);
-        }
-
-        return empresas;
     }
 
     public static Map<String, List<Empresas>> carregarPorPeriodo() {
@@ -160,7 +148,10 @@ public class JsonCriar {
         }
 
         File[] jsonFiles = listarArquivosJson();
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .setPrettyPrinting()
+                .create();
 
         for (File jsonFile : jsonFiles) {
             List<Empresas> empresas = carregarEmpresasExistentes(gson, jsonFile);
