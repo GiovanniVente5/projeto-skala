@@ -97,6 +97,10 @@ public class Empresas {
         return emissao;
     }
 
+    public Month getVencimentoMes() {
+        return vencimentoMes;
+    }
+
     public long getNumFatura() {
         return numFatura;
     }

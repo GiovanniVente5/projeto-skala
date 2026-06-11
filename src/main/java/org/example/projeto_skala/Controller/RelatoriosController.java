@@ -22,14 +22,12 @@ import javafx.geometry.Insets;
 import org.example.projeto_skala.Json.JsonCriar;
 import org.example.projeto_skala.SkalaApplication;
 import org.example.projeto_skala.controlePDF.GerarPDF;
-import org.example.projeto_skala.controleTXT.gerarTXT;
+import org.example.projeto_skala.controleXLSX.CriarRelatorio;
 import org.example.projeto_skala.objetos.Empresas;
 
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -224,7 +222,8 @@ public class RelatoriosController {
                     });
             }
             System.out.println(outDir.getPath());
-            gerarTXT.gerarRelatorio(entry.getValue(), outDir.getPath(),"Relatório");
+//            gerarTXT.gerarRelatorio(entry.getValue(), outDir.getPath(),"Relatório");
+            CriarRelatorio.criarRelatorio(entry.getValue(), outDir.getPath());
         }
 
         // monitor completion

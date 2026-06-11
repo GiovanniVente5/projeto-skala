@@ -83,7 +83,7 @@ public class LerExcel {
                     id++;
                 }
             }
-            sheet0.getRow(0).getCell(cord.getCoordenada()).setCellValue(numFatura+cord.getFatura());
+            sheet0.getRow(0).getCell(cord.getCoordenada()).setCellValue(numFatura);
             try (FileOutputStream fos = new FileOutputStream(file)) {
                 workbook.write(fos);
             }
