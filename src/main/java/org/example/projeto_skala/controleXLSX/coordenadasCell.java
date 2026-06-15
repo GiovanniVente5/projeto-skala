@@ -14,6 +14,7 @@ public class coordenadasCell {
     long fatura;
     LocalDate dataEmissao;
     Month mesVencimento;
+    String texto;
     int coordenada;
 
     public coordenadasCell(Sheet sheet) {
@@ -27,10 +28,17 @@ public class coordenadasCell {
             }
         }
 
+        Cell celulaData = sheet.getRow(1).getCell(coord);
+        String data = celulaData.getDateCellValue().toInstant().toString();
+        data = data.substring(0,10);
+
         DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String data = LerExcel.getValorCell(sheet.getRow(1).getCell(coord));
-        setDataEmissao(LocalDate.parse(data,df));
+LocalDate date = LocalDate.parse(data);
+        System.out.println(date);
+        System.out.println(date.format(df));
+        this.dataEmissao = date;
         this.mesVencimento = mesString(LerExcel.getValorCell(sheet.getRow(2).getCell(coord)));
+        this.texto = LerExcel.getValorCell(sheet.getRow(3).getCell(coord));
         this.fatura = fatura;
         this.coordenada = coord;
     }
@@ -66,7 +74,7 @@ public class coordenadasCell {
         return coordenada;
     }
 
-    public long getFatura() {
-        return fatura;
+    public String getTexto() {
+        return texto;
     }
 }

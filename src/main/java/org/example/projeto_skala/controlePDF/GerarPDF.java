@@ -41,7 +41,7 @@ public class GerarPDF {
     private static final String TEMPLATE_RESOURCE = "/org/example/projeto_skala/controlePDF/PdfTemplate/Recibo-Template.pdf";
     private static final String FONT_RESOURCE = "/org/example/projeto_skala/controlePDF/PdfTemplate/ARIAL.TTF";
 
-    public static void gerarRecibo(Empresas empresa, File outDir) throws IOException {
+    public static void gerarRecibo(Empresas empresa, File outDir, String emissao) throws IOException {
 
 
         if (!outDir.exists() && !outDir.mkdirs()) {
@@ -59,9 +59,8 @@ public class GerarPDF {
 //          Emissão
 
             DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String dataFormatada = empresa.getEmissao().format(formato);
-
-            escrever(canvas, fonte, new Paragraph(dataFormatada), 450, 737, 100);
+            String emissaoFormato = "01/" + emissao.replaceAll("-","/");
+            escrever(canvas, fonte, new Paragraph(emissaoFormato), 450, 737, 100);
 
 //          Numero fatura
             escrever(canvas, fonte, new Paragraph(String.valueOf(empresa.getNumFatura())), 460, 724, 100);
@@ -70,6 +69,7 @@ public class GerarPDF {
             escrever(canvas, fonte, new Paragraph(empresa.calcularVencimento().format(formato)), 465, 710, 100);
 
 //          Dados cliente
+//          nome podendo ocupar duas linhas
             if (empresa.getNome().length() > 90) {
                 String linha1 = null;
                 String linha2 = null;
@@ -139,6 +139,26 @@ public class GerarPDF {
 //          Liquido a receber
             valoresDoc.add(new Paragraph(nf.format(descontosSomados + subTotal)).setFixedPosition(502, 308, 50));
 
+
+//          Texto de mensagem no final do recibo
+            if (empresa.getTexto().length() > 90) {
+                String linha3 = null;
+                String linha4 = null;
+                char[] nomeChar = empresa.getTexto().toCharArray();
+
+                for (int i = 75; i < 91; i++) {
+                    char tempChar = nomeChar[i];
+                    if (tempChar == ' ') {
+                        linha3 = empresa.getTexto().substring(0, i);
+                        linha4 = empresa.getTexto().substring(i);
+                    }
+                }
+                escrever(canvas, fonte, new Paragraph(linha3).setBold(), 68, 75, 550);
+                escrever(canvas, fonte, new Paragraph(linha4).setBold(), 68, 65, 550);
+            } else {
+                escrever(canvas, fonte, new Paragraph(empresa.getTexto()).setBold(), 68, 65, 550);
+            }
+
         }
     }
 
@@ -159,7 +179,7 @@ public class GerarPDF {
         }
     }
 
-    private static void escrever(PdfCanvas pdfCanvas, PdfFont fonte, Paragraph texto, float x, float y, float largura) {
+    public static void escrever(PdfCanvas pdfCanvas, PdfFont fonte, Paragraph texto, float x, float y, float largura) {
         Rectangle area = new Rectangle(x, y, largura, (float) 8 + 4);
 
         try (Canvas canvas = new Canvas(pdfCanvas, area)) {

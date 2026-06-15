@@ -24,6 +24,7 @@ public class Empresas {
     public String InscrCCM;
     public String InscrEST;
     private List<Servicos> servicos;
+    private String texto = "";
 
     public Empresas(int id, String nome, int num, long numFatura, int diaVencimento, Month vencimentoMes, LocalDate emissao, String endereco, String CNPJ, String inscrCCM, String inscrEST, List<Servicos> servicos) {
         this.id = id;
@@ -38,6 +39,22 @@ public class Empresas {
         InscrCCM = inscrCCM;
         InscrEST = inscrEST;
         this.servicos = servicos;
+    }
+
+    public Empresas(int id, String nome, int num, long numFatura, int diaVencimento, Month vencimentoMes, LocalDate emissao, String endereco, String CNPJ, String inscrCCM, String inscrEST, List<Servicos> servicos, String texto) {
+        this.id = id;
+        this.nome = nome;
+        this.num = num;
+        this.numFatura = numFatura;
+        this.diaVencimento = diaVencimento;
+        this.vencimentoMes = vencimentoMes;
+        this.emissao = emissao;
+        this.endereco = endereco;
+        this.CNPJ = CNPJ;
+        InscrCCM = inscrCCM;
+        InscrEST = inscrEST;
+        this.servicos = servicos;
+        this.texto = texto;
     }
 
     @Override
@@ -62,7 +79,7 @@ public class Empresas {
 
         int diaVencimento = this.diaVencimento;
 
-        YearMonth mes = YearMonth.of(emissao.plusMonths(1).getYear(),vencimentoMes);
+        YearMonth mes = YearMonth.of(emissao.getYear(),vencimentoMes);
         LocalDate hoje = LocalDate.now();
 
         int diaAjustado = Math.min(diaVencimento, vencimentoMes.length(hoje.isLeapYear()));
@@ -87,6 +104,10 @@ public class Empresas {
             valorTotal += serv.getValor();
         }
         return valorTotal;
+    }
+
+    public String getTexto() {
+        return texto;
     }
 
     public int getDiaVencimento() {

@@ -77,7 +77,7 @@ public class LerExcel {
                     }
                 }
                 if (!servicos.isEmpty()) {
-                    Empresas emp = new Empresas (id, nome, num, numFatura, diaVencimento,cord.mesVencimento,cord.getDataEmissao(), endereco, CNPJ, InscrCCM, InscrEST, servicos);
+                    Empresas emp = new Empresas (id, nome, num, numFatura, diaVencimento,cord.mesVencimento,cord.getDataEmissao(), endereco, CNPJ, InscrCCM, InscrEST, servicos, cord.getTexto());
                     linhas.add(emp);
                     numFatura++;
                     id++;

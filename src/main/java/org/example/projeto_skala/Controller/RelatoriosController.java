@@ -213,7 +213,7 @@ public class RelatoriosController {
 
                     completionService.submit(() -> {
                         try {
-                            GerarPDF.gerarRecibo(emp, outDir);
+                            GerarPDF.gerarRecibo(emp, outDir,folderName);
                             return emp;
                         } catch (Exception ex) {
                             ex.printStackTrace();
@@ -222,8 +222,8 @@ public class RelatoriosController {
                     });
             }
             System.out.println(outDir.getPath());
-//            gerarTXT.gerarRelatorio(entry.getValue(), outDir.getPath(),"Relatório");
-            CriarRelatorio.criarRelatorio(entry.getValue(), outDir.getPath());
+
+            CriarRelatorio.criarRelatorio(entry.getValue(), outDir.getPath(), folderName);
         }
 
         // monitor completion

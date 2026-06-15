@@ -5,19 +5,24 @@ import org.example.projeto_skala.objetos.Servicos;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
 public class testepdf {
     public static void main(String[] args) throws IOException {
-        Servicos serv = new Servicos("PROCESSAMENTO DE ARQUIVOS XML PARA TRANSMISSÃO VIA SISTEMA AUDESP - ATOS DE PESSOAL DO TRIBUNAL DE CONTAS DO ESTADO DE SÃO PAULO",1,10.00);
-        Servicos serv1 = new Servicos("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",1,-10.00);
-        Servicos serv2 = new Servicos("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",1,18360.00);
+        Servicos serv = new Servicos("PROCESSAMENTO DE ARQUIVOS XML PARA TRANSMISSÃO VIA SISTEMA AUDESP - ATOS DE PESSOAL DO TRIBUNAL DE CONTAS DO ESTADO DE SÃO PAULO", 1, 10.00);
+        Servicos serv1 = new Servicos("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 1, -10.00);
+        Servicos serv2 = new Servicos("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", 1, 18360.00);
 
         ArrayList<Servicos> servs = new ArrayList<>();
         servs.add(serv);
         servs.add(serv1);
         servs.add(serv2);
+
+        Month mes = LocalDate.now().getMonth();
+        LocalDate data = LocalDate.now();
 
         Empresas emp = new Empresas(
                 1,
@@ -25,11 +30,14 @@ public class testepdf {
                 23,
                 123,
                 1,
+                mes,
+                data,
                 "RUA",
                 "123",
                 "123",
                 "123",
-                servs
+                servs,
+                "TESTE DE LOCAL DE TEXTO-1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 "
         );
         File outDir = new File("data/");
         ArrayList<Empresas> Lista = new ArrayList<>();
@@ -37,6 +45,6 @@ public class testepdf {
         Lista.add(emp);
         Lista.add(emp);
 
-        GerarPDF.gerarRecibo(emp,outDir);
+//        GerarPDF.gerarRecibo(emp, outDir);
     }
 }

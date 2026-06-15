@@ -14,7 +14,8 @@ import java.util.*;
 
 public class CriarRelatorio {
 
-    public static void criarRelatorio(List<Empresas> empresas, String destino) throws IOException {
+    public static void criarRelatorio(List<Empresas> empresas, String destino,String folderData) throws IOException {
+        empresas.sort(Comparator.comparing(Empresas::getDiaVencimento));
 
 //      dados - formato do valor + periodo de vencimento
         NumberFormat nf = NumberFormat.getInstance(new Locale("pt", "BR"));
@@ -22,11 +23,9 @@ public class CriarRelatorio {
         nf.setMaximumFractionDigits(2);
 
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        DateTimeFormatter formatoArquivo = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate hoje = LocalDate.now();
+        LocalDate hoje = empresas.getFirst().getEmissao();
         YearMonth mesAtual = YearMonth.from(hoje);
 
-        empresas.sort(Comparator.comparing(Empresas::getDiaVencimento));
 
         int diaAjustado = Math.min(empresas.getFirst().getDiaVencimento(), mesAtual.lengthOfMonth());
         LocalDate vencimentoDiaUm = mesAtual.atDay(diaAjustado);
@@ -61,7 +60,19 @@ public class CriarRelatorio {
         cabecalhoEstilo2.setBorderRight(BorderStyle.THIN);
         cabecalhoEstilo2.setBorderTop(BorderStyle.THICK);
 
-        String[] cabecalho = {"Relatório Mensal", "Período de Vencimento:", vencimentoDiaUm.format(formato), vencimentoDiaDois.format(formato), "Skala Contabilidade", "Data do relatório:", hoje.format(formato)};
+        CellStyle dinheiroEstilo = excel.createCellStyle();
+        dinheiroEstilo.setDataFormat((short) 7);
+        dinheiroEstilo.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        dinheiroEstilo.setAlignment(HorizontalAlignment.LEFT);
+        dinheiroEstilo.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+        dinheiroEstilo.setBorderBottom(BorderStyle.THIN);
+        dinheiroEstilo.setBorderLeft(BorderStyle.THIN);
+        dinheiroEstilo.setBorderRight(BorderStyle.THICK);
+        dinheiroEstilo.setBorderTop(BorderStyle.THIN);
+
+
+        String[] cabecalho = {"Relatório Mensal", "Período de Vencimento:", vencimentoDiaUm.format(formato), vencimentoDiaDois.format(formato), "Skala Contabilidade", "Data do relatório:", LocalDate.now().format(formato)};
 
         Row cabecalho0 = planilha.createRow(0);
         Row cabecalho1 = planilha.createRow(1);
@@ -134,7 +145,7 @@ public class CriarRelatorio {
         empresas.sort(Comparator.comparing(Empresas::getDiaVencimento));
 
         for (Empresas emp : empresas) {
-            empresaCelulas(emp, planilha, coluna, estilo);
+            empresaCelulas(emp, planilha, coluna, estilo,dinheiroEstilo);
             planilha.autoSizeColumn(coluna);
             sb.append(planilha.getRow(coluna).getCell(4).getAddress()).append("+");
             coluna++;
@@ -142,11 +153,13 @@ public class CriarRelatorio {
         sb.deleteCharAt(sb.length() - 1);
 
         CellStyle resultadoEstilo = excel.createCellStyle();
+        resultadoEstilo.setDataFormat((short) 7);
         resultadoEstilo.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
         resultadoEstilo.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
         resultadoEstilo.setBorderBottom(BorderStyle.THICK);
         resultadoEstilo.setBorderTop(BorderStyle.THICK);
+        resultadoEstilo.setBorderRight(BorderStyle.THICK);
 
 //      Coluna Resultados totais
         Row resultado = planilha.createRow(coluna);
@@ -172,11 +185,13 @@ public class CriarRelatorio {
         planilha.autoSizeColumn(1);
         planilha.autoSizeColumn(2);
 
-        FileOutputStream out = new FileOutputStream(destino + "Relatório-" + formatoArquivo.format(vencimentoDiaUm) + ".xlsx");
+        folderData = "1-" + folderData;
+        FileOutputStream out = new FileOutputStream(destino + "/Relatório-" + folderData + ".xlsx");
         excel.write(out);
+        excel.close();
     }
 
-    public static void empresaCelulas(Empresas emp, Sheet planilha, int rowComeco, CellStyle cs) {
+    public static void empresaCelulas(Empresas emp, Sheet planilha, int rowComeco, CellStyle cs,CellStyle valores) {
         Row row = planilha.createRow(rowComeco);
 
         Cell cellNum = row.createCell(0);
@@ -188,13 +203,14 @@ public class CriarRelatorio {
 
         Cell cellVencimento = row.createCell(2);
         cellVencimento.setCellStyle(cs);
-        cellVencimento.setCellValue(String.valueOf(emp.calcularVencimento()));
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        cellVencimento.setCellValue(emp.calcularVencimento().format(df));
 
         Cell cellFaturaNum = row.createCell(3);
         cellFaturaNum.setCellValue(emp.getNumFatura());
 
         Cell cellValor = row.createCell(4);
-        cellValor.setCellStyle(cs);
+        cellValor.setCellStyle(valores);
         cellValor.setCellValue(emp.getValorTotal());
     }
 }
