@@ -33,6 +33,7 @@ import java.text.NumberFormat;
 
 import java.time.format.DateTimeFormatter;
 
+import java.util.List;
 import java.util.Locale;
 
 import static com.itextpdf.layout.borders.Border.NO_BORDER;
@@ -139,6 +140,14 @@ public class GerarPDF {
 //          Liquido a receber
             valoresDoc.add(new Paragraph(nf.format(descontosSomados + subTotal)).setFixedPosition(502, 308, 50));
 
+//          Banco / PIX
+            List<String> banco = empresa.getBanco().getInfo();
+            int y = 320;
+
+            for (String str : banco){
+                escrever(canvas, fonte, new Paragraph(str).setBold(), 68, y, 550);
+                y -= 10;
+            }
 
 //          Texto de mensagem no final do recibo
             if (empresa.getTexto().length() > 90) {
@@ -181,7 +190,6 @@ public class GerarPDF {
 
     public static void escrever(PdfCanvas pdfCanvas, PdfFont fonte, Paragraph texto, float x, float y, float largura) {
         Rectangle area = new Rectangle(x, y, largura, (float) 8 + 4);
-
         try (Canvas canvas = new Canvas(pdfCanvas, area)) {
             canvas.add(texto.setFont(fonte).setFontSize((float) 8).setTextAlignment(TextAlignment.LEFT).setMargin(0));
         }

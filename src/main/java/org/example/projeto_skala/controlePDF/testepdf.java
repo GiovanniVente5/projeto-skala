@@ -1,5 +1,6 @@
 package org.example.projeto_skala.controlePDF;
 
+import org.example.projeto_skala.objetos.Banco;
 import org.example.projeto_skala.objetos.Empresas;
 import org.example.projeto_skala.objetos.Servicos;
 
@@ -8,7 +9,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
-import java.util.List;
 
 public class testepdf {
     public static void main(String[] args) throws IOException {
@@ -24,6 +24,7 @@ public class testepdf {
         Month mes = LocalDate.now().getMonth();
         LocalDate data = LocalDate.now();
 
+        Banco banco = new Banco("Nome banco","Nome conta","CNPJ","Agencia","CC");
         Empresas emp = new Empresas(
                 1,
                 "Giovanni",
@@ -37,6 +38,7 @@ public class testepdf {
                 "123",
                 "123",
                 servs,
+                banco,
                 "TESTE DE LOCAL DE TEXTO-1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 1234 "
         );
         File outDir = new File("data/");
@@ -45,6 +47,6 @@ public class testepdf {
         Lista.add(emp);
         Lista.add(emp);
 
-//        GerarPDF.gerarRecibo(emp, outDir);
+        GerarPDF.gerarRecibo(emp, outDir,"OQ");
     }
 }

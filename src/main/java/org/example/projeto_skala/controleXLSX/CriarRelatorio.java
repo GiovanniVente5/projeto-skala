@@ -23,7 +23,7 @@ public class CriarRelatorio {
         nf.setMaximumFractionDigits(2);
 
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate hoje = empresas.getFirst().getEmissao();
+        LocalDate hoje = empresas.getFirst().calcularVencimento();
         YearMonth mesAtual = YearMonth.from(hoje);
 
 
