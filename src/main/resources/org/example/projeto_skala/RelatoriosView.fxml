@@ -18,5 +18,10 @@
         <Button fx:id="abrirPastaBtn" text="Abrir pasta de Recibos" />
         <Button fx:id="gerarBtn" text="Gerar Recibos para todas as empresas" />
     </HBox>
-    <Label fx:id="statusLabel"/>
+    <Label fx:id="statusLabel" />
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="clientes-scroll">
+        <content>
+            <VBox fx:id="relatoriosContainer" spacing="10" />
+        </content>
+    </ScrollPane>
 </VBox>

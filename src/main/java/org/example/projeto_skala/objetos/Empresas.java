@@ -27,21 +27,21 @@ public class Empresas {
     private Banco banco;
     private String texto = "";
 
-//    public Empresas(int id, String nome, int num, long numFatura, int diaVencimento, Month vencimentoMes, LocalDate emissao, String endereco, String CNPJ, String inscrCCM, String inscrEST, List<Servicos> servicos, String texto) {
-//        this.id = id;
-//        this.nome = nome;
-//        this.num = num;
-//        this.numFatura = numFatura;
-//        this.diaVencimento = diaVencimento;
-//        this.vencimentoMes = vencimentoMes;
-//        this.emissao = emissao;
-//        this.endereco = endereco;
-//        this.CNPJ = CNPJ;
-//        InscrCCM = inscrCCM;
-//        InscrEST = inscrEST;
-//        this.servicos = servicos;
-//        this.texto = texto;
-//    }
+    public Empresas(int id, String nome, int num, long numFatura, int diaVencimento, Month vencimentoMes, LocalDate emissao, String endereco, String CNPJ, String inscrCCM, String inscrEST, List<Servicos> servicos, String texto) {
+        this.id = id;
+        this.nome = nome;
+        this.num = num;
+        this.numFatura = numFatura;
+        this.diaVencimento = diaVencimento;
+        this.vencimentoMes = vencimentoMes;
+        this.emissao = emissao;
+        this.endereco = endereco;
+        this.CNPJ = CNPJ;
+        InscrCCM = inscrCCM;
+        InscrEST = inscrEST;
+        this.servicos = servicos;
+        this.texto = texto;
+    }
 
     public Empresas(int id, String nome, int num, long numFatura, int diaVencimento, Month vencimentoMes, LocalDate emissao, String endereco, String CNPJ, String inscrCCM, String inscrEST, List<Servicos> servicos, Banco banco, String texto) {
         this.id = id;

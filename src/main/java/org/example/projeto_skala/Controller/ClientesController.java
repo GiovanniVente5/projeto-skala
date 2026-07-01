@@ -226,13 +226,14 @@ public class ClientesController {
             TextField cnpjField = criarCampoTexto(empresa.getCNPJ(), 220);
             TextField inscrCCMField = criarCampoTexto(empresa.getInscrCCM(), 220);
             TextField inscrESTField = criarCampoTexto(empresa.getInscrEST(), 220);
-            
+            TextField textField = criarCampoTexto(empresa.getTexto(), 220);
+
             Label servicosLbl = new Label("Serviços:");
             servicosLbl.setStyle("-fx-font-weight: bold;");
-            
+
             VBox servicosContainer = new VBox(8);
             servicosContainer.setStyle("-fx-border-color: #e0e0e0; -fx-border-radius: 4; -fx-padding: 8;");
-            
+
             java.util.List<ClienteEditItem> servicoItems = new ArrayList<>();
             
             if (empresa.getServicos() != null) {
@@ -260,6 +261,7 @@ public class ClientesController {
                 criarLinhaCampo("CNPJ:", cnpjField),
                 criarLinhaCampo("Inscr. CCM:", inscrCCMField),
                 criarLinhaCampo("Inscr. EST:", inscrESTField),
+                criarLinhaCampo("Texto Adicional", textField),
                 new Separator(),
                 servicosLbl, servicosContainer, adicionarServicoBtn
             );
@@ -282,7 +284,8 @@ public class ClientesController {
                             obterTexto(cnpjField),
                             obterTexto(inscrCCMField),
                             obterTexto(inscrESTField),
-                            coletarServicos(servicoItems)
+                            coletarServicos(servicoItems),
+                            obterTexto(textField)
                     );
 
                     salvarEmpresaAtualizada(empresaAtualizada, periodoReferencia);
