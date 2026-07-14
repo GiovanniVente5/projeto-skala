@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="720.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.projeto_skala.Controller.ReciboTemplateController">
+    <stylesheets>
+        <URL value="@MenuView.css" />
+    </stylesheets>
+    <padding>
+        <Insets top="18" right="24" bottom="18" left="24" />
+    </padding>
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="12" styleClass="clientes-toolbar">
+            <Button mnemonicParsing="false" onAction="#voltarMenu" text="Voltar" />
+            <Label maxWidth="Infinity" styleClass="clientes-title" text="Recibo Exemplo" HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#selecionarTemplate" text="Trocar PDF" />
+            <Button mnemonicParsing="false" onAction="#restaurarPadrao" text="Padrao" />
+            <Button mnemonicParsing="false" onAction="#salvarConfiguracao" text="Salvar" />
+        </HBox>
+    </top>
+    <center>
+        <SplitPane dividerPositions="0.72">
+            <BorderPane.margin>
+                <Insets top="18" right="18" bottom="18" left="18" />
+            </BorderPane.margin>
+            <ScrollPane pannable="true" styleClass="clientes-scroll">
+                <content>
+                    <StackPane fx:id="pageStack" alignment="TOP_LEFT" styleClass="pdf-editor-page">
+                        <ImageView fx:id="pdfImageView" preserveRatio="true" />
+                        <Pane fx:id="overlayPane" pickOnBounds="true" />
+                    </StackPane>
+                </content>
+            </ScrollPane>
+            <VBox spacing="12" styleClass="recibo-sidebar">
+                <Label styleClass="field-label" text="Campo" />
+                <ComboBox fx:id="campoCombo" maxWidth="Infinity" />
+                <GridPane hgap="8" vgap="8">
+                    <columnConstraints>
+                        <ColumnConstraints halignment="RIGHT" minWidth="58" />
+                        <ColumnConstraints hgrow="ALWAYS" />
+                    </columnConstraints>
+                    <Label styleClass="field-label" text="X" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <TextField fx:id="xField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    <Label styleClass="field-label" text="Y" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <TextField fx:id="yField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <Label styleClass="field-label" text="Largura" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <TextField fx:id="larguraField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    <Label styleClass="field-label" text="Altura" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                    <TextField fx:id="alturaField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                </GridPane>
+                <Separator />
+                <Label fx:id="templateLabel" styleClass="selected-file" wrapText="true" />
+                <Label fx:id="statusLabel" styleClass="selected-file" wrapText="true" />
+            </VBox>
+        </SplitPane>
+    </center>
+</BorderPane>

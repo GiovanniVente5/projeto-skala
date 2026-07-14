@@ -231,3 +231,27 @@
 .danger-button {
     -fx-background-color: #8f4545;
 }
+
+.recibo-sidebar {
+    -fx-background-color: #3b4145;
+    -fx-background-radius: 8px;
+    -fx-border-color: #59646b;
+    -fx-border-radius: 8px;
+    -fx-padding: 14px;
+}
+
+.pdf-editor-page {
+    -fx-background-color: white;
+}
+
+.split-pane {
+    -fx-background-color: #2f3437;
+}
+
+.split-pane-divider {
+    -fx-background-color: #59646b;
+}
+
+.separator .line {
+    -fx-border-color: #59646b;
+}

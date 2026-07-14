@@ -85,6 +85,16 @@
             <version>5.2.5</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox</artifactId>
+            <version>2.0.26</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.rjolly</groupId>
+            <artifactId>pdf-renderer</artifactId>
+            <version>140</version>
+        </dependency>
+        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>2.11.0</version>
@@ -136,8 +146,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.13.0</version>
                 <configuration>
-                    <source>21</source>
-                    <target>21</target>
+                    <release>21</release>
                 </configuration>
             </plugin>
             <plugin>
@@ -148,7 +157,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>org.example.projeto_skala/org.example.projeto_skala.Launcher</mainClass>
+                            <mainClass>org.example.projeto_skala.Launcher</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>

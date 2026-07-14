@@ -22,6 +22,7 @@
     <HBox alignment="CENTER" maxWidth="460.0" spacing="12" styleClass="menu-actions">
         <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#abrirTelaClientes" text="Cliente" HBox.hgrow="ALWAYS" />
         <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#abrirTelaRelatorios" text="Relatorios" HBox.hgrow="ALWAYS" />
+        <Button maxWidth="Infinity" mnemonicParsing="false" onAction="#abrirTelaReciboTemplate" text="Recibo Exemplo" HBox.hgrow="ALWAYS" />
     </HBox>
 
 </VBox>

@@ -195,6 +195,12 @@ public class MenuController {
         dropZone.getScene().setRoot(root);
     }
 
+    @FXML
+    private void abrirTelaReciboTemplate() throws IOException {
+        Parent root = FXMLLoader.load(SkalaApplication.class.getResource("ReciboTemplateView.fxml"));
+        dropZone.getScene().setRoot(root);
+    }
+
     private boolean hasSpreadsheetFile(List<File> files) {
         return findFirstSpreadsheetFile(files) != null;
     }

@@ -3,174 +3,181 @@ package org.example.projeto_skala.controlePDF;
 import com.itextpdf.io.font.PdfEncodings;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
-import com.itextpdf.layout.Document;
+import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
-
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.BorderCollapsePropertyValue;
 import com.itextpdf.layout.properties.TextAlignment;
-import com.itextpdf.layout.Canvas;
-import com.itextpdf.kernel.geom.Rectangle;
-
 import com.itextpdf.layout.properties.UnitValue;
 import com.itextpdf.layout.properties.VerticalAlignment;
-
-
+import org.example.projeto_skala.Json.JsonReciboConfig;
 import org.example.projeto_skala.objetos.Empresas;
+import org.example.projeto_skala.objetos.ReciboCampoConfig;
+import org.example.projeto_skala.objetos.ReciboConfig;
 import org.example.projeto_skala.objetos.Servicos;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.File;
 import java.io.InputStream;
 import java.text.NumberFormat;
-
 import java.time.format.DateTimeFormatter;
-
 import java.util.List;
 import java.util.Locale;
 
 import static com.itextpdf.layout.borders.Border.NO_BORDER;
 
 public class GerarPDF {
-    private static final String TEMPLATE_RESOURCE = "/org/example/projeto_skala/controlePDF/PdfTemplate/Recibo-Template.pdf";
+    private static final String TEMPLATE_RESOURCE = JsonReciboConfig.DEFAULT_TEMPLATE_RESOURCE;
     private static final String FONT_RESOURCE = "/org/example/projeto_skala/controlePDF/PdfTemplate/ARIAL.TTF";
 
     public static void gerarRecibo(Empresas empresa, File outDir, String emissao) throws IOException {
-
-
         if (!outDir.exists() && !outDir.mkdirs()) {
             throw new IOException("Nao foi possivel criar a pasta de destino: " + outDir.getAbsolutePath());
         }
 
         String destino = outDir.getPath() + File.separator + "Empresa-" + empresa.getNum() + "-Fatura-" + empresa.getNumFatura() + ".pdf";
+        ReciboConfig config = JsonReciboConfig.carregarOuCriarPadrao();
 
-        try (InputStream template = abrirRecurso(TEMPLATE_RESOURCE); PdfReader reader = new PdfReader(template); PdfWriter writer = new PdfWriter(destino); PdfDocument pdfDocument = new PdfDocument(reader, writer)) {
+        try (InputStream template = abrirTemplate(config);
+             PdfReader reader = new PdfReader(template);
+             PdfWriter writer = new PdfWriter(destino);
+             PdfDocument pdfDocument = new PdfDocument(reader, writer)) {
 
             PdfFont fonte = PdfFontFactory.createFont(carregarRecurso(), PdfEncodings.IDENTITY_H, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
             PdfPage pagina = pdfDocument.getFirstPage();
             PdfCanvas canvas = new PdfCanvas(pagina);
 
-//          Emissão
-
             DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            String emissaoFormato = "01/" + emissao.replaceAll("-","/");
-            escrever(canvas, fonte, new Paragraph(emissaoFormato), 450, 737, 100);
+            String emissaoFormato = "01/" + emissao.replace("-", "/");
+            escreverCampo(canvas, fonte, config, "emissao", emissaoFormato, false, TextAlignment.LEFT);
+            escreverCampo(canvas, fonte, config, "numeroFatura", String.valueOf(empresa.getNumFatura()), false, TextAlignment.LEFT);
+            escreverCampo(canvas, fonte, config, "vencimento", empresa.calcularVencimento().format(formato), false, TextAlignment.LEFT);
 
-//          Numero fatura
-            escrever(canvas, fonte, new Paragraph(String.valueOf(empresa.getNumFatura())), 460, 724, 100);
-
-//          Vencimento
-            escrever(canvas, fonte, new Paragraph(empresa.calcularVencimento().format(formato)), 465, 710, 100);
-
-//          Dados cliente
-//          nome podendo ocupar duas linhas
-            if (empresa.getNome().length() > 90) {
-                String linha1 = null;
-                String linha2 = null;
-                char[] nomeChar = empresa.getNome().toCharArray();
-
-                for (int i = 75; i < 91; i++) {
-                    char tempChar = nomeChar[i];
-                    if (tempChar == ' ') {
-                        linha1 = empresa.getNome().substring(0, i);
-                        linha2 = empresa.getNome().substring(i);
-                    }
-                }
-
-                escrever(canvas, fonte, new Paragraph(linha1).setBold(), 68, 650, 490);
-                escrever(canvas, fonte, new Paragraph(linha2).setBold(), 68, 640, 500);
-            } else {
-                escrever(canvas, fonte, new Paragraph(empresa.getNome()).setBold(), 68, 640, 500);
-            }
-            escrever(canvas, fonte, new Paragraph(empresa.getEndereco()), 68, 630, 400);
-            escrever(canvas, fonte, new Paragraph("CNPJ/MF: " + empresa.getCNPJ()), 68, 620, 150);
-            escrever(canvas, fonte, new Paragraph("INSCR. EST: " + empresa.getInscrEST()), 207, 620, 150);
-            escrever(canvas, fonte, new Paragraph("INSCR. CCM: " + empresa.getInscrCCM()), 357, 620, 150);
-
-//          Numero empresa
-            escrever(canvas, fonte, new Paragraph(String.valueOf(empresa.getNum())), 415, 594, 100);
-
-//          Serviços a serem pagos
-            Document servicosDoc = new Document(pdfDocument).setFont(fonte).setFontSize(8);
-            servicosDoc.setMargins(248, 10, 20, 68);
-
-            Document valoresDoc = new Document(pdfDocument).setFont(fonte).setFontSize(8).setTextAlignment(TextAlignment.RIGHT);
-            valoresDoc.setMargins(248, 44, 10, 160);
+            escreverCampo(canvas, fonte, config, "nomeCliente", empresa.getNome(), true, TextAlignment.LEFT);
+            escreverCampo(canvas, fonte, config, "endereco", empresa.getEndereco(), false, TextAlignment.LEFT);
+            escreverCampo(canvas, fonte, config, "cnpj", "CNPJ/MF: " + textoSeguro(empresa.getCNPJ()), false, TextAlignment.LEFT);
+            escreverCampo(canvas, fonte, config, "inscrEst", "INSCR. EST: " + textoSeguro(empresa.getInscrEST()), false, TextAlignment.LEFT);
+            escreverCampo(canvas, fonte, config, "inscrCcm", "INSCR. CCM: " + textoSeguro(empresa.getInscrCCM()), false, TextAlignment.LEFT);
+            escreverCampo(canvas, fonte, config, "numeroEmpresa", String.valueOf(empresa.getNum()), false, TextAlignment.LEFT);
 
             NumberFormat nf = NumberFormat.getInstance(new Locale("pt", "BR"));
             nf.setMinimumFractionDigits(2);
             nf.setMaximumFractionDigits(2);
 
+            List<Servicos> servicos = empresa.getServicos() == null ? List.of() : empresa.getServicos();
             double descontosSomados = 0;
             double subTotal = 0;
 
-            //          Serviços
-            Table tabela = new Table(UnitValue.createPointArray(new float[]{440f, 200f}));
-            tabela.setBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
-            tabela.setMarginRight(30);
+            for (Servicos servico : servicos) {
+                Double valor = servico.getValor();
+                if (valor == null) {
+                    continue;
+                }
 
-            for (Servicos servico : empresa.getServicos()) {
-                if (servico.getValor() > 0) {
-                    tabela.addCell(celulaSemBorda(servico.getNome(), fonte, TextAlignment.LEFT));
-                    tabela.addCell(celulaSemBorda(nf.format(servico.getValor()), fonte, TextAlignment.RIGHT));
-                    subTotal += servico.getValor();
+                if (valor > 0) {
+                    subTotal += valor;
                 } else {
-                    descontosSomados += servico.getValor();
+                    descontosSomados += valor;
                 }
             }
-            servicosDoc.add(tabela);
 
-//          todos os descontos
-            valoresDoc.add(new Paragraph(nf.format(descontosSomados)).setFixedPosition(502, 408, 50));
+            escreverServicos(canvas, fonte, config, servicos, nf);
+            escreverCampo(canvas, fonte, config, "descontosSomados", nf.format(descontosSomados), false, TextAlignment.RIGHT);
+            escreverCampo(canvas, fonte, config, "subtotal", nf.format(subTotal), false, TextAlignment.RIGHT);
+            escreverCampo(canvas, fonte, config, "descontos", nf.format(descontosSomados), false, TextAlignment.RIGHT);
+            escreverCampo(canvas, fonte, config, "liquidoReceber", nf.format(descontosSomados + subTotal), false, TextAlignment.RIGHT);
 
-
-//          SubTotal
-            valoresDoc.add(new Paragraph(nf.format(subTotal)).setFixedPosition(502, 375, 50));
-
-//          Descontos
-            valoresDoc.add(new Paragraph(nf.format(descontosSomados)).setFixedPosition(502, 325, 50));
-
-//          Liquido a receber
-            valoresDoc.add(new Paragraph(nf.format(descontosSomados + subTotal)).setFixedPosition(502, 308, 50));
-
-//          Banco / PIX
-            List<String> banco = empresa.getBanco().getInfo();
-            int y = 320;
-
-            for (String str : banco){
-                escrever(canvas, fonte, new Paragraph(str).setBold(), 68, y, 550);
-                y -= 10;
-            }
-
-//          Texto de mensagem no final do recibo
-            if (empresa.getTexto().length() > 90) {
-                String linha3 = null;
-                String linha4 = null;
-                char[] nomeChar = empresa.getTexto().toCharArray();
-
-                for (int i = 75; i < 91; i++) {
-                    char tempChar = nomeChar[i];
-                    if (tempChar == ' ') {
-                        linha3 = empresa.getTexto().substring(0, i);
-                        linha4 = empresa.getTexto().substring(i);
-                    }
-                }
-                escrever(canvas, fonte, new Paragraph(linha3).setBold(), 68, 75, 550);
-                escrever(canvas, fonte, new Paragraph(linha4).setBold(), 68, 65, 550);
-            } else {
-                escrever(canvas, fonte, new Paragraph(empresa.getTexto()).setBold(), 68, 65, 550);
-            }
-
+            List<String> banco = empresa.getBanco() == null || empresa.getBanco().getInfo() == null
+                    ? List.of()
+                    : empresa.getBanco().getInfo();
+            escreverCampo(canvas, fonte, config, "banco", String.join("\n", banco), true, TextAlignment.LEFT);
+            escreverCampo(canvas, fonte, config, "mensagem", empresa.getTexto(), true, TextAlignment.LEFT);
         }
     }
 
+    private static void escreverServicos(PdfCanvas pdfCanvas, PdfFont fonte, ReciboConfig config, List<Servicos> servicos, NumberFormat nf) {
+        ReciboCampoConfig campo = getCampo(config, "servicos");
+        float largura = (float) campo.getLargura();
+        float colunaValor = Math.max(60f, Math.min(100f, largura * 0.25f));
+        float colunaServico = Math.max(40f, largura - colunaValor);
+
+        Table tabela = new Table(UnitValue.createPointArray(new float[]{colunaServico, colunaValor}));
+        tabela.setBorderCollapse(BorderCollapsePropertyValue.SEPARATE);
+        tabela.setMargin(0);
+
+        for (Servicos servico : servicos) {
+            Double valor = servico.getValor();
+            if (valor != null && valor > 0) {
+                tabela.addCell(celulaSemBorda(textoSeguro(servico.getNome()), fonte, TextAlignment.LEFT));
+                tabela.addCell(celulaSemBorda(nf.format(valor), fonte, TextAlignment.RIGHT));
+            }
+        }
+
+        try (Canvas canvas = new Canvas(pdfCanvas, toRectangle(campo))) {
+            canvas.add(tabela);
+        }
+    }
+
+    private static void escreverCampo(PdfCanvas pdfCanvas, PdfFont fonte, ReciboConfig config, String campoId, String texto, boolean negrito, TextAlignment alinhamento) {
+        Paragraph paragraph = new Paragraph(textoSeguro(texto))
+                .setFont(fonte)
+                .setFontSize(8)
+                .setTextAlignment(alinhamento)
+                .setMargin(0)
+                .setMultipliedLeading(1.0f);
+
+        if (negrito) {
+            paragraph.setBold();
+        }
+
+        escrever(pdfCanvas, fonte, paragraph, getCampo(config, campoId), alinhamento);
+    }
+
+    private static void escrever(PdfCanvas pdfCanvas, PdfFont fonte, Paragraph texto, ReciboCampoConfig campo, TextAlignment alinhamento) {
+        try (Canvas canvas = new Canvas(pdfCanvas, toRectangle(campo))) {
+            canvas.add(texto.setFont(fonte).setFontSize(8).setTextAlignment(alinhamento).setMargin(0));
+        }
+    }
+
+    private static Rectangle toRectangle(ReciboCampoConfig campo) {
+        return new Rectangle(
+                (float) campo.getX(),
+                (float) campo.getY(),
+                (float) campo.getLargura(),
+                (float) campo.getAltura()
+        );
+    }
+
+    private static ReciboCampoConfig getCampo(ReciboConfig config, String campoId) {
+        ReciboCampoConfig campo = config.getCampo(campoId);
+        return campo == null ? JsonReciboConfig.getCampoPadrao(campoId) : campo;
+    }
+
+    private static String textoSeguro(String texto) {
+        return texto == null ? "" : texto;
+    }
+
+    private static InputStream abrirTemplate(ReciboConfig config) throws IOException {
+        String templatePath = config.getTemplatePath();
+
+        if (templatePath != null && !templatePath.isBlank()) {
+            File templateFile = new File(templatePath);
+            if (templateFile.isFile()) {
+                return new FileInputStream(templateFile);
+            }
+        }
+
+        return abrirRecurso(TEMPLATE_RESOURCE);
+    }
 
     private static InputStream abrirRecurso(String caminho) throws IOException {
         InputStream inputStream = GerarPDF.class.getResourceAsStream(caminho);
@@ -189,13 +196,17 @@ public class GerarPDF {
     }
 
     public static void escrever(PdfCanvas pdfCanvas, PdfFont fonte, Paragraph texto, float x, float y, float largura) {
-        Rectangle area = new Rectangle(x, y, largura, (float) 8 + 4);
-        try (Canvas canvas = new Canvas(pdfCanvas, area)) {
-            canvas.add(texto.setFont(fonte).setFontSize((float) 8).setTextAlignment(TextAlignment.LEFT).setMargin(0));
-        }
+        ReciboCampoConfig campo = new ReciboCampoConfig(x, y, largura, 12);
+        escrever(pdfCanvas, fonte, texto, campo, TextAlignment.LEFT);
     }
 
     static Cell celulaSemBorda(String texto, PdfFont fonte, TextAlignment alinhamento) {
-        return new Cell().add(new Paragraph(texto).setFont(fonte).setFontSize(8)).setBorder(NO_BORDER).setTextAlignment(alinhamento).setVerticalAlignment(VerticalAlignment.MIDDLE).setPaddingTop(6f).setPaddingBottom(6f);
+        return new Cell()
+                .add(new Paragraph(texto).setFont(fonte).setFontSize(8))
+                .setBorder(NO_BORDER)
+                .setTextAlignment(alinhamento)
+                .setVerticalAlignment(VerticalAlignment.MIDDLE)
+                .setPaddingTop(6f)
+                .setPaddingBottom(6f);
     }
 }
