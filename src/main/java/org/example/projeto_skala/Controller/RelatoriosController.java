@@ -142,6 +142,7 @@ public class RelatoriosController {
             arquivosBox.getChildren().add(criarLinhaRelatorio(relatorio));
         }
 
+
         dropdown.setGraphic(cabecalho);
         dropdown.setContent(arquivosBox);
         return dropdown;
@@ -156,10 +157,14 @@ public class RelatoriosController {
         nome.setWrapText(true);
         HBox.setHgrow(nome, Priority.ALWAYS);
 
-        Button abrirBtn = new Button("Abrir");
+        Button abrirBtn = new Button("Relatório");
         abrirBtn.setOnAction(e -> abrirArquivo(relatorio));
 
-        linha.getChildren().addAll(nome, abrirBtn);
+        Button abrirBtnRecibo = new Button("Recibos");
+        File recibos = new File(relatorio.getPath().replace(relatorio.getName(), ""));
+        abrirBtnRecibo.setOnAction(e -> abrirArquivo(recibos));
+
+        linha.getChildren().addAll(nome, abrirBtn,abrirBtnRecibo);
         return linha;
     }
 

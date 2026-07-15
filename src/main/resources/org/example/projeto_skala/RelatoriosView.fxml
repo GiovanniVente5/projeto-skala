@@ -15,8 +15,8 @@
     <HBox alignment="CENTER_LEFT" spacing="12" styleClass="clientes-toolbar">
         <Button fx:id="voltarBtn" mnemonicParsing="false" onAction="#voltarMenu" text="Voltar" />
         <Label styleClass="clientes-title" text="Relatórios" HBox.hgrow="ALWAYS" />
-        <Button fx:id="abrirPastaBtn" text="Abrir pasta de Recibos" />
-        <Button fx:id="gerarBtn" text="Gerar Recibos para todas as empresas" />
+        <Button fx:id="abrirPastaBtn" text="Abrir pasta de todos os recibos" />
+        <Button fx:id="gerarBtn" text="Gerar Recibos" />
     </HBox>
     <Label fx:id="statusLabel" />
     <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="clientes-scroll">

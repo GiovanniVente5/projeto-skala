@@ -72,7 +72,7 @@ public class CriarRelatorio {
         dinheiroEstilo.setBorderTop(BorderStyle.THIN);
 
 
-        String[] cabecalho = {"Relatório Mensal", "Período de Vencimento:", vencimentoDiaUm.format(formato), vencimentoDiaDois.format(formato), "Skala Contabilidade", "Data do relatório:", LocalDate.now().format(formato)};
+        String[] cabecalho = {"Relatório Mensal", "Período de Vencimento:", vencimentoDiaUm.format(formato), vencimentoDiaDois.format(formato), "Relatório contábil", "Data do relatório:", LocalDate.now().format(formato)};
 
         Row cabecalho0 = planilha.createRow(0);
         Row cabecalho1 = planilha.createRow(1);
