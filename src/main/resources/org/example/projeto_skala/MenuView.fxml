@@ -5,7 +5,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" prefHeight="700.0" prefWidth="700.0" spacing="24" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.projeto_skala.Controller.MenuController">
+<VBox alignment="CENTER" prefHeight="700.0" prefWidth="700.0" spacing="24" xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.projeto_skala.Controller.MenuController">
     <stylesheets>
         <URL value="@MenuView.css" />
     </stylesheets>

@@ -136,9 +136,65 @@
                         <manifest>
                             <mainClass>org.example.projeto_skala.Launcher</mainClass>
                             <addClasspath>true</addClasspath>
-                            <classpathPrefix>./</classpathPrefix>
+                            <classpathPrefix>libs/</classpathPrefix>
                         </manifest>
                     </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.8.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-deps</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/libs</outputDirectory>
+                            <includeScope>runtime</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.panteleyev</groupId>
+                <artifactId>jpackage-maven-plugin</artifactId>
+                <version>1.6.5</version>
+                <configuration>
+                    <name>Skala-Conversor</name>
+                    <appVersion>1.0.0</appVersion>
+                    <vendor>Skala</vendor>
+                    <destination>${project.build.directory}/dist</destination>
+                    <input>${project.build.directory}</input>
+                    <mainJar>${project.build.finalName}.jar</mainJar>
+                    <mainClass>org.example.projeto_skala.Launcher</mainClass>
+                    <addModules>
+                        <addModule>java.sql</addModule>
+                        <addModule>java.naming</addModule>
+                        <addModule>java.logging</addModule>
+                        <addModule>java.desktop</addModule>
+                        <addModule>jdk.unsupported</addModule>
+
+                        <addModule>java.sql</addModule>
+                        <addModule>java.naming</addModule>
+                        <addModule>java.logging</addModule>
+                        <addModule>java.desktop</addModule>
+                        <addModule>java.scripting</addModule>
+                        <addModule>java.xml</addModule>
+                        <addModule>java.prefs</addModule>
+                        <addModule>jdk.unsupported</addModule>
+                        <addModule>jdk.xml.dom</addModule>
+
+                    </addModules>
+                    <type>EXE</type>
+                    <winMenu>true</winMenu>
+                    <winShortcut>true</winShortcut>
+                    <winDirChooser>true</winDirChooser>
+                    <winUpgradeUuid>93953516-e097-4275-9484-0962195a5539</winUpgradeUuid>
+                    <winConsole>true</winConsole> <!-- CONSOLE PARA DEBUG RETIRAR NA ENTREGA -->
                 </configuration>
             </plugin>
             <plugin>

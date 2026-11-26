@@ -81,14 +81,13 @@ public class Empresas {
     }
 
     public LocalDate calcularVencimento() {
-
-        int diaVencimento = this.diaVencimento;
-
         YearMonth mes = YearMonth.of(emissao.getYear(), vencimentoMes);
-        LocalDate hoje = LocalDate.now();
+        LocalDate vencimento = mes.atDay(Math.min(diaVencimento, mes.lengthOfMonth()));
 
-        int diaAjustado = Math.min(diaVencimento, vencimentoMes.length(hoje.isLeapYear()));
-        LocalDate vencimento = mes.atDay(diaAjustado);
+        if (vencimento.isBefore(emissao)) {
+            mes = mes.plusYears(1);
+            vencimento = mes.atDay(Math.min(diaVencimento, mes.lengthOfMonth()));
+        }
 
         return vencimento;
     }
